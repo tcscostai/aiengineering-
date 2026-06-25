@@ -1,0 +1,19 @@
+{
+  "dimensions": [
+    { "id": "groundedness", "label": "Groundedness", "score": 94, "target": 90, "trend": "up" },
+    { "id": "hallucination", "label": "Hallucination", "score": 97, "target": 95, "trend": "up", "inverse": true },
+    { "id": "latency", "label": "Latency", "score": 88, "target": 85, "trend": "stable" },
+    { "id": "security", "label": "Security", "score": 96, "target": 95, "trend": "up" },
+    { "id": "cost", "label": "Cost", "score": 82, "target": 80, "trend": "up" },
+    { "id": "businessQuality", "label": "Business Quality", "score": 91, "target": 88, "trend": "up" },
+    { "id": "compliance", "label": "Compliance", "score": 98, "target": 95, "trend": "stable" },
+    { "id": "accuracy", "label": "Accuracy", "score": 93, "target": 90, "trend": "up" },
+    { "id": "explainability", "label": "Explainability", "score": 89, "target": 85, "trend": "up" }
+  ],
+  "recentEvaluations": [
+    { "agent": "Architecture Review Agent", "score": 94, "date": "2024-06-24" },
+    { "agent": "RCA Agent", "score": 96, "date": "2024-06-24" },
+    { "agent": "Regression Test Agent", "score": 91, "date": "2024-06-23" },
+    { "agent": "Clinical Review Agent", "score": 93, "date": "2024-06-23" }
+  ]
+}

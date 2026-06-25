@@ -1,0 +1,13 @@
+{
+  "kpis": [
+    { "id": "velocity", "label": "Engineering Velocity", "value": 94, "unit": "index", "trend": 12, "sparkline": [62, 68, 74, 81, 88, 94] },
+    { "id": "reuse", "label": "Agent Reuse", "value": 72, "unit": "%", "trend": 8, "sparkline": [45, 52, 58, 65, 72, 78] },
+    { "id": "knowledge", "label": "Knowledge Growth", "value": 2847, "unit": "assets", "trend": 24, "sparkline": [847, 1247, 1547, 1847, 2347, 2847] },
+    { "id": "automation", "label": "Automation", "value": 68, "unit": "%", "trend": 15, "sparkline": [32, 38, 45, 52, 61, 68] },
+    { "id": "quality", "label": "Quality", "value": 91, "unit": "score", "trend": 5, "sparkline": [82, 84, 86, 88, 90, 91] },
+    { "id": "cost", "label": "Cost Optimization", "value": 34, "unit": "% saved", "trend": 9, "sparkline": [12, 16, 20, 24, 29, 34] },
+    { "id": "governance", "label": "Governance", "value": 96, "unit": "%", "trend": 2, "sparkline": [88, 90, 92, 94, 95, 96] },
+    { "id": "value", "label": "Business Value", "value": 4.2, "unit": "M ROI", "trend": 18, "sparkline": [1.2, 1.8, 2.4, 3.0, 3.6, 4.2] }
+  ],
+  "executiveSummary": "Horizon AI Engineering Operating System has delivered 4.2M ROI through systematic agent reuse, reducing time-to-value by 67% across AD, AMS, and QE domains."
+}

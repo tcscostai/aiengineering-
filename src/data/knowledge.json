@@ -1,0 +1,22 @@
+{
+  "categories": ["Architecture", "Business Rules", "Applications", "APIs", "Incidents", "Telemetry", "Policies", "Code", "Design Patterns", "Requirements", "Knowledge Articles", "Production Logs"],
+  "memoryTypes": [
+    { "id": "reusable", "label": "Reusable Knowledge", "count": 1247 },
+    { "id": "project", "label": "Project Memory", "count": 384 },
+    { "id": "enterprise", "label": "Enterprise Memory", "count": 892 },
+    { "id": "decision", "label": "Decision Memory", "count": 156 },
+    { "id": "business", "label": "Business Memory", "count": 168 }
+  ],
+  "nodes": [
+    { "id": "arch", "label": "Architecture", "type": "source", "connections": ["api", "code", "patterns"] },
+    { "id": "api", "label": "APIs", "type": "source", "connections": ["apps", "requirements"] },
+    { "id": "code", "label": "Code", "type": "source", "connections": ["patterns", "policies"] },
+    { "id": "patterns", "label": "Design Patterns", "type": "knowledge", "connections": ["arch", "code"] },
+    { "id": "apps", "label": "Applications", "type": "entity", "connections": ["incidents", "telemetry"] },
+    { "id": "incidents", "label": "Incidents", "type": "entity", "connections": ["runbooks", "telemetry"] },
+    { "id": "telemetry", "label": "Telemetry", "type": "entity", "connections": ["incidents"] },
+    { "id": "policies", "label": "Policies", "type": "governance", "connections": ["arch", "code"] },
+    { "id": "requirements", "label": "Requirements", "type": "source", "connections": ["api", "apps"] },
+    { "id": "runbooks", "label": "Knowledge Articles", "type": "knowledge", "connections": ["incidents"] }
+  ]
+}

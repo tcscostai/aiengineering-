@@ -1,0 +1,38 @@
+{
+  "health": {
+    "score": 94,
+    "reuseRatio": 72,
+    "evaluationScore": 91,
+    "governanceCoverage": 96,
+    "runtimeStatus": "Operational",
+    "governanceStatus": "Compliant"
+  },
+  "metrics": {
+    "activeInitiatives": 3,
+    "runningAgents": 24,
+    "reusableSkills": 47,
+    "reusableWorkflows": 18,
+    "certifiedAgents": 12,
+    "knowledgeAssets": 2847,
+    "automationOpportunity": 68
+  },
+  "nexusNodes": [
+    { "id": "nexus", "label": "AI Engineering Nexus", "type": "center" },
+    { "id": "ad", "label": "Application Development", "type": "domain" },
+    { "id": "ams", "label": "AMS", "type": "domain" },
+    { "id": "qe", "label": "Quality Engineering", "type": "domain" },
+    { "id": "knowledge", "label": "Knowledge Fabric", "type": "capability" },
+    { "id": "harness", "label": "AI Harness", "type": "capability" },
+    { "id": "marketplace", "label": "Marketplace", "type": "capability" },
+    { "id": "governance", "label": "Governance", "type": "capability" },
+    { "id": "learning", "label": "Continuous Learning", "type": "capability" }
+  ],
+  "velocityTrend": [
+    { "month": "Jan", "velocity": 62, "reuse": 45 },
+    { "month": "Feb", "velocity": 68, "reuse": 52 },
+    { "month": "Mar", "velocity": 74, "reuse": 58 },
+    { "month": "Apr", "velocity": 81, "reuse": 65 },
+    { "month": "May", "velocity": 88, "reuse": 72 },
+    { "month": "Jun", "velocity": 94, "reuse": 78 }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "incident": {
+    "id": "INC-2024-8847",
+    "title": "Payment Gateway Timeout - P1",
+    "severity": "P1",
+    "service": "Claims Processing API",
+    "timestamp": "2024-06-25T14:32:00Z",
+    "status": "investigating"
+  },
+  "timeline": [
+    { "time": "14:32", "event": "Alert triggered - 504 Gateway Timeout", "agent": "Monitoring" },
+    { "time": "14:33", "event": "Incident classified as P1", "agent": "RCA Agent" },
+    { "time": "14:34", "event": "Log correlation initiated across 12 services", "agent": "RCA Agent" },
+    { "time": "14:36", "event": "Historical match: INC-2023-4521 (92% similarity)", "agent": "Knowledge Search" },
+    { "time": "14:38", "event": "Root cause identified: Connection pool exhaustion", "agent": "RCA Agent" },
+    { "time": "14:40", "event": "Change recommendation generated", "agent": "Change Impact Agent" }
+  ],
+  "metrics": {
+    "mttr": "18 min",
+    "confidence": 94,
+    "impact": "High",
+    "affectedUsers": 1247
+  },
+  "rootCause": "Connection pool exhaustion in payment-gateway-service due to unreleased connections after recent deployment v2.4.1",
+  "recommendation": "Rollback deployment v2.4.1 and apply hotfix PR-8847 for connection lifecycle management"
+}

@@ -1,0 +1,30 @@
+{
+  "pipeline": [
+    { "id": "context", "label": "Context Assembly", "status": "complete" },
+    { "id": "prompt", "label": "Prompt Assembly", "status": "complete" },
+    { "id": "memory", "label": "Memory Retrieval", "status": "active" },
+    { "id": "tool", "label": "Tool Routing", "status": "pending" },
+    { "id": "workflow", "label": "Workflow Routing", "status": "pending" },
+    { "id": "collab", "label": "Agent Collaboration", "status": "pending" },
+    { "id": "eval", "label": "Evaluation", "status": "pending" },
+    { "id": "policy", "label": "Policy Enforcement", "status": "pending" },
+    { "id": "obs", "label": "Observability", "status": "pending" },
+    { "id": "human", "label": "Human Approval", "status": "pending" }
+  ],
+  "sources": [
+    "Jira",
+    "Confluence",
+    "ServiceNow",
+    "Architecture Repository",
+    "Policies",
+    "Source Code",
+    "Historical Projects",
+    "APIs",
+    "Standards"
+  ],
+  "metrics": {
+    "contextConfidence": 94,
+    "reuseReadiness": 87,
+    "knowledgeCoverage": 91
+  }
+}

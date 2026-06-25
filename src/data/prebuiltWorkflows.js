@@ -1,0 +1,771 @@
+import { WORKFLOW_SCHEMA_VERSION } from '../lib/workflowSchema'
+import { DEMO_AGENT_IDS } from './demoAgents'
+
+const DEFAULT_POLICY = {
+  enforceEvaluation: true,
+  minEvalScore: 85,
+  requireGovernance: true,
+  observability: true,
+}
+
+const AMS_POLICY = { ...DEFAULT_POLICY, minEvalScore: 80 }
+
+function prebuilt(id, fields) {
+  const now = new Date().toISOString()
+  return {
+    schemaVersion: WORKFLOW_SCHEMA_VERSION,
+    id,
+    createdAt: now,
+    updatedAt: now,
+    harnessPolicy: DEFAULT_POLICY,
+    metadata: {
+      reuseCount: fields.metadata?.reuseCount ?? 0,
+      certified: true,
+      prebuilt: true,
+      tags: ['healthcare', ...(fields.metadata?.tags ?? [])],
+      updatedAt: now,
+      ...fields.metadata,
+    },
+    ...fields,
+  }
+}
+
+/** Stable healthcare & platform workflow templates — upserted on every platform seed */
+export const PREBUILT_WORKFLOW_IDS = {
+  priorAuth: 'demo_wf_prior_auth',
+  priorAuthClinical: 'demo_wf_prior_auth_clinical',
+  claimAdjudication: 'demo_wf_claim_adjudication',
+  claimsModernization: 'demo_wf_claims_modernization',
+  eligibility: 'demo_wf_eligibility',
+  benefitsInquiry: 'demo_wf_benefits_inquiry',
+  pharmacyPa: 'demo_wf_pharmacy_pa',
+  fhirPriorAuth: 'demo_wf_fhir_prior_auth',
+  ediClaims: 'demo_wf_edi_claims',
+  utilizationReview: 'demo_wf_utilization_review',
+  appealGrievance: 'demo_wf_appeal_grievance',
+  providerCredentialing: 'demo_wf_provider_credentialing',
+  incidentResponse: 'demo_wf_incident_response',
+  memberOnboarding: 'demo_wf_member_onboarding',
+  priorAuthProdIncident: 'demo_wf_prior_auth_prod_incident',
+}
+
+export const PREBUILT_WORKFLOWS = [
+  prebuilt(PREBUILT_WORKFLOW_IDS.priorAuth, {
+    name: 'Prior Auth Delivery Workflow',
+    description:
+      'End-to-end prior authorization delivery — API design, code review, HIPAA policy gate, regression testing, and clinical approval.',
+    category: 'ad',
+    project: 'Prior Authorization Automation',
+    createdBy: 'Priya Sharma',
+    nodes: [
+      {
+        id: 'n1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Generate prior auth decision API contract (FHIR R4 PAS)',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'n2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review PR for decision engine service and clinical rules engine',
+        position: { x: 280, y: 120 },
+      },
+      {
+        id: 'n3',
+        type: 'policy_gate',
+        label: 'HIPAA Policy Gate',
+        approverRole: 'Compliance Officer',
+        position: { x: 560, y: 120 },
+      },
+      {
+        id: 'n4',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Run prior auth regression suite — clinical scenarios & edge cases',
+        position: { x: 840, y: 120 },
+      },
+      {
+        id: 'n5',
+        type: 'human_approval',
+        label: 'Clinical Approval',
+        approverRole: 'Chief Medical Officer',
+        position: { x: 1120, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'e1', source: 'n1', target: 'n2', handoff: 'api_contract' },
+      { id: 'e2', source: 'n2', target: 'n3', handoff: 'review_passed' },
+      { id: 'e3', source: 'n3', target: 'n4', handoff: 'policy_cleared' },
+      { id: 'e4', source: 'n4', target: 'n5', handoff: 'tests_passed' },
+    ],
+    metadata: { reuseCount: 12, tags: ['prior-auth', 'hipaa', 'clinical'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.priorAuthClinical, {
+    name: 'Prior Authorization — Clinical Review Pipeline',
+    description:
+      'Architecture through clinical sign-off: HLD review, API contract, synthetic clinical regression, and medical director approval.',
+    category: 'ad',
+    project: 'Prior Authorization Automation',
+    createdBy: 'Priya Sharma',
+    nodes: [
+      {
+        id: 'pc1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.archReview,
+        label: 'Architecture Review Agent',
+        task: 'Review prior auth HLD against enterprise patterns and CMS interoperability guidelines',
+        position: { x: 0, y: 140 },
+      },
+      {
+        id: 'pc2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design clinical review and decision endpoints with FHIR extensions',
+        position: { x: 300, y: 140 },
+      },
+      {
+        id: 'pc3',
+        type: 'policy_gate',
+        label: 'Clinical Policy Gate',
+        approverRole: 'Medical Policy Director',
+        position: { x: 600, y: 140 },
+      },
+      {
+        id: 'pc4',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Execute synthetic clinical scenarios — oncology, orthopedics, behavioral health',
+        position: { x: 900, y: 140 },
+      },
+      {
+        id: 'pc5',
+        type: 'human_approval',
+        label: 'Medical Director Sign-off',
+        approverRole: 'Chief Medical Officer',
+        position: { x: 1200, y: 140 },
+      },
+    ],
+    edges: [
+      { id: 'pce1', source: 'pc1', target: 'pc2', handoff: 'architecture_approved' },
+      { id: 'pce2', source: 'pc2', target: 'pc3', handoff: 'api_contract' },
+      { id: 'pce3', source: 'pc3', target: 'pc4', handoff: 'policy_cleared' },
+      { id: 'pce4', source: 'pc4', target: 'pc5', handoff: 'clinical_tests_passed' },
+    ],
+    metadata: { reuseCount: 8, tags: ['prior-auth', 'clinical', 'fhir'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.claimAdjudication, {
+    name: 'Claim Adjudication Pipeline',
+    description:
+      'Automated claim adjudication — code review for business rules, API contract validation, compliance gate, and payer approval.',
+    category: 'ad',
+    project: 'Claims Modernization',
+    createdBy: 'Alex Rivera',
+    nodes: [
+      {
+        id: 'ca1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review adjudication engine PR — COB, pricing, and medical necessity rules',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'ca2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Contract & load tests for claims adjudication REST API',
+        position: { x: 280, y: 120 },
+      },
+      {
+        id: 'ca3',
+        type: 'policy_gate',
+        label: 'Claims Compliance Gate',
+        approverRole: 'Claims Compliance',
+        position: { x: 560, y: 120 },
+      },
+      {
+        id: 'ca4',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Run claims adjudication golden-path and denial reason code suites',
+        position: { x: 840, y: 120 },
+      },
+      {
+        id: 'ca5',
+        type: 'human_approval',
+        label: 'Payer Operations Approval',
+        approverRole: 'VP Claims Operations',
+        position: { x: 1120, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'cae1', source: 'ca1', target: 'ca2', handoff: 'review_passed' },
+      { id: 'cae2', source: 'ca2', target: 'ca3', handoff: 'api_validated' },
+      { id: 'cae3', source: 'ca3', target: 'ca4', handoff: 'compliance_cleared' },
+      { id: 'cae4', source: 'ca4', target: 'ca5', handoff: 'tests_passed' },
+    ],
+    metadata: { reuseCount: 9, tags: ['claims', 'adjudication', '837'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.claimsModernization, {
+    name: 'Claims API Modernization',
+    description: 'Modernize claims processing APIs — design, review, and quality gates for eligibility and adjudication services.',
+    category: 'ad',
+    project: 'Claims Modernization',
+    createdBy: 'Marcus Chen',
+    nodes: [
+      {
+        id: 'cm1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design claims submission and status inquiry OpenAPI specs',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'cm2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review microservice implementation for claims intake pipeline',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'cm3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Generate Postman collections and contract tests for claims APIs',
+        position: { x: 600, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'cme1', source: 'cm1', target: 'cm2', handoff: 'api_contract' },
+      { id: 'cme2', source: 'cm2', target: 'cm3', handoff: 'review_passed' },
+    ],
+    metadata: { reuseCount: 6, tags: ['claims', 'api', 'modernization'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.eligibility, {
+    name: 'Member Eligibility Verification',
+    description:
+      'Real-time eligibility check workflow — API design, automated testing, and HIPAA policy validation before production.',
+    category: 'ad',
+    project: 'Member Experience Platform',
+    createdBy: 'Marcus Chen',
+    nodes: [
+      {
+        id: 'el1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design 270/271 eligibility inquiry API with FHIR Coverage resource mapping',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'el2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Validate eligibility response schemas and payer routing logic',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'el3',
+        type: 'policy_gate',
+        label: 'HIPAA Eligibility Gate',
+        approverRole: 'Privacy Officer',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'el4',
+        type: 'human_approval',
+        label: 'Production Release Approval',
+        approverRole: 'Director of Integration',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'ele1', source: 'el1', target: 'el2', handoff: 'api_contract' },
+      { id: 'ele2', source: 'el2', target: 'el3', handoff: 'tests_passed' },
+      { id: 'ele3', source: 'el3', target: 'el4', handoff: 'policy_cleared' },
+    ],
+    metadata: { reuseCount: 4, tags: ['eligibility', '270-271', 'member'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.benefitsInquiry, {
+    name: 'Benefits Inquiry Automation',
+    description:
+      'Automate member benefits lookups — architecture review, benefits API design, and regression against plan documents.',
+    category: 'ad',
+    project: 'Member Experience Platform',
+    createdBy: 'Priya Sharma',
+    nodes: [
+      {
+        id: 'bi1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.archReview,
+        label: 'Architecture Review Agent',
+        task: 'Review benefits inquiry service architecture and data residency',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'bi2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design benefits summary and cost-share calculation endpoints',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'bi3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Test benefits scenarios across HMO, PPO, and EPO plan types',
+        position: { x: 600, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'bie1', source: 'bi1', target: 'bi2', handoff: 'architecture_approved' },
+      { id: 'bie2', source: 'bi2', target: 'bi3', handoff: 'api_contract' },
+    ],
+    metadata: { reuseCount: 3, tags: ['benefits', 'member', 'inquiry'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.pharmacyPa, {
+    name: 'Pharmacy Prior Authorization',
+    description:
+      'Specialty pharmacy PA workflow — code review for NCPDP messaging, regression on formulary rules, clinical approval.',
+    category: 'qe',
+    project: 'Pharmacy Benefits Management',
+    createdBy: 'Nina Patel',
+    nodes: [
+      {
+        id: 'pp1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review pharmacy PA service — NCPDP SCRIPT and formulary tier logic',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'pp2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Run pharmacy PA scenarios — specialty drugs, step therapy, quantity limits',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'pp3',
+        type: 'policy_gate',
+        label: 'Pharmacy Policy Gate',
+        approverRole: 'Pharmacy Director',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'pp4',
+        type: 'human_approval',
+        label: 'Clinical Pharmacy Approval',
+        approverRole: 'Chief Pharmacy Officer',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'ppe1', source: 'pp1', target: 'pp2', handoff: 'review_passed' },
+      { id: 'ppe2', source: 'pp2', target: 'pp3', handoff: 'tests_passed' },
+      { id: 'ppe3', source: 'pp3', target: 'pp4', handoff: 'policy_cleared' },
+    ],
+    metadata: { reuseCount: 5, tags: ['pharmacy', 'prior-auth', 'formulary'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.fhirPriorAuth, {
+    name: 'FHIR Prior Auth Bundle Processing',
+    description:
+      'CMS interoperability — FHIR R4 PAS bundle intake, API validation, architecture compliance, and end-to-end QE.',
+    category: 'ad',
+    project: 'Prior Authorization Automation',
+    createdBy: 'Marcus Chen',
+    nodes: [
+      {
+        id: 'fh1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.archReview,
+        label: 'Architecture Review Agent',
+        task: 'Validate FHIR PAS implementation against Da Vinci PAS IG',
+        position: { x: 0, y: 140 },
+      },
+      {
+        id: 'fh2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Define ClaimResponse and Task resource mappings for PAS workflow',
+        position: { x: 280, y: 140 },
+      },
+      {
+        id: 'fh3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Validate FHIR bundle schemas and SMART-on-FHIR auth flows',
+        position: { x: 560, y: 140 },
+      },
+      {
+        id: 'fh4',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'End-to-end PAS bundle submission and status polling tests',
+        position: { x: 840, y: 140 },
+      },
+      {
+        id: 'fh5',
+        type: 'human_approval',
+        label: 'Interoperability Sign-off',
+        approverRole: 'Director of Integration',
+        position: { x: 1120, y: 140 },
+      },
+    ],
+    edges: [
+      { id: 'fhe1', source: 'fh1', target: 'fh2', handoff: 'ig_compliant' },
+      { id: 'fhe2', source: 'fh2', target: 'fh3', handoff: 'api_contract' },
+      { id: 'fhe3', source: 'fh3', target: 'fh4', handoff: 'fhir_validated' },
+      { id: 'fhe4', source: 'fh4', target: 'fh5', handoff: 'e2e_passed' },
+    ],
+    metadata: { reuseCount: 7, tags: ['fhir', 'pas', 'interoperability', 'cms'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.ediClaims, {
+    name: 'EDI 837 Claims Integration',
+    description: 'Professional and institutional claim EDI ingestion — API layer design, code review, and integration testing.',
+    category: 'ad',
+    project: 'Claims Modernization',
+    createdBy: 'Alex Rivera',
+    nodes: [
+      {
+        id: 'ed1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design EDI 837P/837I translation layer and acknowledgment APIs',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'ed2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review X12 parser and claim normalization service',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'ed3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Validate 837 sample files, 999 acknowledgments, and error routing',
+        position: { x: 600, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'ede1', source: 'ed1', target: 'ed2', handoff: 'api_contract' },
+      { id: 'ede2', source: 'ed2', target: 'ed3', handoff: 'review_passed' },
+    ],
+    metadata: { reuseCount: 4, tags: ['edi', '837', 'claims', 'x12'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.utilizationReview, {
+    name: 'Utilization Management Review',
+    description:
+      'UM concurrent review workflow — regression on medical necessity rules, policy gate, and utilization nurse approval.',
+    category: 'qe',
+    project: 'Utilization Management',
+    createdBy: 'Nina Patel',
+    nodes: [
+      {
+        id: 'um1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'Test UM rules — length of stay, readmission, and level-of-care criteria',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'um2',
+        type: 'policy_gate',
+        label: 'Medical Necessity Gate',
+        approverRole: 'UM Medical Director',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'um3',
+        type: 'human_approval',
+        label: 'Utilization Nurse Review',
+        approverRole: 'UM Nurse Supervisor',
+        position: { x: 600, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'ume1', source: 'um1', target: 'um2', handoff: 'rules_validated' },
+      { id: 'ume2', source: 'um2', target: 'um3', handoff: 'necessity_confirmed' },
+    ],
+    metadata: { reuseCount: 2, tags: ['utilization', 'medical-necessity', 'concurrent-review'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.appealGrievance, {
+    name: 'Appeal & Grievance Handling',
+    description:
+      'Member appeal intake and resolution — incident triage for SLA breaches, runbook generation, and compliance approval.',
+    category: 'ams',
+    project: 'Member Experience Platform',
+    createdBy: 'Sam Okafor',
+    harnessPolicy: AMS_POLICY,
+    nodes: [
+      {
+        id: 'ag1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.incidentClass,
+        label: 'Incident Classification Agent',
+        task: 'Classify appeal SLA breach — expedited vs standard track',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'ag2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.runbook,
+        label: 'Runbook Assistant Agent',
+        task: 'Generate appeal resolution runbook with regulatory citations',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'ag3',
+        type: 'policy_gate',
+        label: 'Regulatory Compliance Gate',
+        approverRole: 'Compliance Officer',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'ag4',
+        type: 'human_approval',
+        label: 'Appeals Committee Review',
+        approverRole: 'Appeals Committee Chair',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'age1', source: 'ag1', target: 'ag2', handoff: 'appeal_classified' },
+      { id: 'age2', source: 'ag2', target: 'ag3', handoff: 'runbook_draft' },
+      { id: 'age3', source: 'ag3', target: 'ag4', handoff: 'compliance_cleared' },
+    ],
+    metadata: { reuseCount: 3, tags: ['appeals', 'grievance', 'member', 'cms'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.providerCredentialing, {
+    name: 'Provider Credentialing Workflow',
+    description:
+      'Provider network credentialing — architecture review, implementation review, and compliance gate before network publish.',
+    category: 'ad',
+    project: 'Provider Network Management',
+    createdBy: 'Priya Sharma',
+    nodes: [
+      {
+        id: 'cr1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.archReview,
+        label: 'Architecture Review Agent',
+        task: 'Review credentialing platform architecture and PII handling',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'cr2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.codeReview,
+        label: 'Code Review Agent',
+        task: 'Review NPDB query integration and primary source verification logic',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'cr3',
+        type: 'policy_gate',
+        label: 'Credentialing Policy Gate',
+        approverRole: 'Network Integrity Director',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'cr4',
+        type: 'human_approval',
+        label: 'Network Committee Approval',
+        approverRole: 'VP Provider Relations',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'cre1', source: 'cr1', target: 'cr2', handoff: 'architecture_approved' },
+      { id: 'cre2', source: 'cr2', target: 'cr3', handoff: 'review_passed' },
+      { id: 'cre3', source: 'cr3', target: 'cr4', handoff: 'policy_cleared' },
+    ],
+    metadata: { reuseCount: 2, tags: ['credentialing', 'provider', 'network'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.memberOnboarding, {
+    name: 'Member Digital Onboarding',
+    description:
+      'New member enrollment flow — API design for enrollment portal, automated testing, and privacy compliance gate.',
+    category: 'ad',
+    project: 'Member Experience Platform',
+    createdBy: 'Marcus Chen',
+    nodes: [
+      {
+        id: 'mo1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiDesign,
+        label: 'API Design Agent',
+        task: 'Design member enrollment and ID card generation APIs',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'mo2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.apiTest,
+        label: 'API Test Agent',
+        task: 'Test enrollment flows — individual, group, and Medicare Advantage',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'mo3',
+        type: 'policy_gate',
+        label: 'Privacy & Consent Gate',
+        approverRole: 'Privacy Officer',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'mo4',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.regression,
+        label: 'Regression Test Agent',
+        task: 'End-to-end onboarding regression — welcome kit, portal access, PCP assignment',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'moe1', source: 'mo1', target: 'mo2', handoff: 'api_contract' },
+      { id: 'moe2', source: 'mo2', target: 'mo3', handoff: 'tests_passed' },
+      { id: 'moe3', source: 'mo3', target: 'mo4', handoff: 'privacy_cleared' },
+    ],
+    metadata: { reuseCount: 3, tags: ['member', 'enrollment', 'onboarding'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.incidentResponse, {
+    name: 'AMS Incident Response Workflow',
+    description: 'Classify production incidents, analyze root cause, generate runbook, and route for operations approval.',
+    category: 'ams',
+    project: 'Platform Resilience Enhancement',
+    createdBy: 'Jordan Kim',
+    harnessPolicy: AMS_POLICY,
+    nodes: [
+      {
+        id: 'm1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.incidentClass,
+        label: 'Incident Classification Agent',
+        task: 'Classify P1 payment gateway timeout affecting claims processing',
+        position: { x: 0, y: 140 },
+      },
+      {
+        id: 'm2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.rca,
+        label: 'RCA Agent',
+        task: 'Correlate logs and identify root cause across claims and PA services',
+        position: { x: 300, y: 140 },
+      },
+      {
+        id: 'm3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.runbook,
+        label: 'Runbook Assistant Agent',
+        task: 'Draft remediation runbook with rollback steps',
+        position: { x: 600, y: 140 },
+      },
+      {
+        id: 'm4',
+        type: 'human_approval',
+        label: 'Operations Approval',
+        approverRole: 'Director of Operations',
+        position: { x: 900, y: 140 },
+      },
+    ],
+    edges: [
+      { id: 'me1', source: 'm1', target: 'm2', handoff: 'classified_incident' },
+      { id: 'me2', source: 'm2', target: 'm3', handoff: 'rca_report' },
+      { id: 'me3', source: 'm3', target: 'm4', handoff: 'runbook_draft' },
+    ],
+    metadata: { reuseCount: 5, tags: ['incident', 'ams', 'resilience'] },
+  }),
+
+  prebuilt(PREBUILT_WORKFLOW_IDS.priorAuthProdIncident, {
+    name: 'Prior Auth Production Incident',
+    description:
+      'Healthcare-specific incident response when prior auth decision engine degrades — classify, RCA, runbook, ops approval.',
+    category: 'ams',
+    project: 'Prior Authorization Automation',
+    createdBy: 'Sam Okafor',
+    harnessPolicy: AMS_POLICY,
+    nodes: [
+      {
+        id: 'pi1',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.incidentClass,
+        label: 'Incident Classification Agent',
+        task: 'Classify prior auth API latency spike — member-facing impact assessment',
+        position: { x: 0, y: 120 },
+      },
+      {
+        id: 'pi2',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.rca,
+        label: 'RCA Agent',
+        task: 'Analyze decision engine timeout — clinical rules cache and DB connection pool',
+        position: { x: 300, y: 120 },
+      },
+      {
+        id: 'pi3',
+        type: 'agent',
+        agentId: DEMO_AGENT_IDS.runbook,
+        label: 'Runbook Assistant Agent',
+        task: 'Draft prior auth failover runbook — manual review queue escalation',
+        position: { x: 600, y: 120 },
+      },
+      {
+        id: 'pi4',
+        type: 'human_approval',
+        label: 'Clinical Operations Approval',
+        approverRole: 'Director of Clinical Operations',
+        position: { x: 900, y: 120 },
+      },
+    ],
+    edges: [
+      { id: 'pie1', source: 'pi1', target: 'pi2', handoff: 'classified_incident' },
+      { id: 'pie2', source: 'pi2', target: 'pi3', handoff: 'rca_report' },
+      { id: 'pie3', source: 'pi3', target: 'pi4', handoff: 'runbook_draft' },
+    ],
+    metadata: { reuseCount: 4, tags: ['prior-auth', 'incident', 'production'] },
+  }),
+]
+
+export function isPrebuiltWorkflow(workflow) {
+  return Boolean(workflow?.metadata?.prebuilt || PREBUILT_WORKFLOWS.some((w) => w.id === workflow?.id))
+}

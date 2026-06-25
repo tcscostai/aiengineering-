@@ -1,0 +1,372 @@
+import { DEMO_AGENT_IDS } from './demoAgents'
+
+export const DEBT_SEVERITY = {
+  critical: { label: 'Critical', color: '#f08984', weight: 4 },
+  high: { label: 'High', color: '#e8b84a', weight: 3 },
+  medium: { label: 'Medium', color: '#5ec8f2', weight: 2 },
+  low: { label: 'Low', color: '#8b9cb0', weight: 1 },
+}
+
+export const DEBT_TYPES = {
+  recurring_incident: { label: 'Recurring Incident', icon: 'alert' },
+  architecture_drift: { label: 'Architecture Drift', icon: 'git-branch' },
+  security_hotspot: { label: 'Security Hotspot', icon: 'shield' },
+  api_deprecation: { label: 'API Deprecation', icon: 'api' },
+  code_smell: { label: 'Code Smell', icon: 'code' },
+  documentation_gap: { label: 'Documentation Gap', icon: 'file' },
+  runbook_gap: { label: 'Runbook Gap', icon: 'book' },
+  change_failure: { label: 'Change Failure Pattern', icon: 'refresh' },
+  coverage_gap: { label: 'Test Coverage Gap', icon: 'test' },
+  flaky_test: { label: 'Flaky Test Debt', icon: 'bug' },
+  traceability_gap: { label: 'Traceability Gap', icon: 'link' },
+  automation_debt: { label: 'Automation Debt', icon: 'zap' },
+}
+
+const categoryDebt = {
+  ad: {
+    summary: {
+      debtIndex: 62,
+      trend: 'improving',
+      criticalCount: 2,
+      agentAssigned: 3,
+      estimatedSavings: '$1.2M/yr',
+    },
+    items: [
+      {
+        id: 'ad-debt-001',
+        title: 'Prior Auth HLD drift from enterprise patterns',
+        type: 'architecture_drift',
+        severity: 'high',
+        debtScore: 78,
+        status: 'agent_assigned',
+        sourceSystem: 'Architecture Repository',
+        knowledgeNodeId: 'prior-auth-hld',
+        affectedAsset: 'Prior Auth HLD v3.2',
+        project: 'Prior Authorization Automation',
+        recurrence: '3 reviews flagged in 90 days',
+        impact: 'Blocks API contract sign-off; increases rework in downstream QE',
+        boundAgentIds: [DEMO_AGENT_IDS.archReview, DEMO_AGENT_IDS.apiDesign],
+        agentRole: {
+          [DEMO_AGENT_IDS.archReview]: 'Reviews HLD against Architecture Repository and flags pattern violations before API Design proceeds',
+          [DEMO_AGENT_IDS.apiDesign]: 'Consumes architecture debt report to avoid propagating drift into OpenAPI contracts',
+        },
+        remediation: 'Architecture Review Agent scheduled harness run — auto-generate delta report vs enterprise microservice patterns',
+        harnessTask: 'Compare Prior Auth HLD v3.2 against Architecture Repository baseline',
+        effortDays: 5,
+        lastDetected: '1 day ago',
+      },
+      {
+        id: 'ad-debt-002',
+        title: 'decision-engine-service — SonarQube security hotspot cluster',
+        type: 'security_hotspot',
+        severity: 'critical',
+        debtScore: 91,
+        status: 'agent_assigned',
+        sourceSystem: 'SonarQube',
+        knowledgeNodeId: 'decision-engine',
+        affectedAsset: 'decision-engine-service',
+        project: 'Prior Authorization Automation',
+        recurrence: '14 open hotspots · 3 critical',
+        impact: 'HIPAA security baseline violation risk on clinical decision path',
+        boundAgentIds: [DEMO_AGENT_IDS.codeReview],
+        agentRole: {
+          [DEMO_AGENT_IDS.codeReview]: 'Scans PRs on decision-engine-service; blocks merge until SonarQube critical hotspots resolved',
+        },
+        remediation: 'Code Review Agent gates PR #8847 — connection pool lifecycle fix must clear security gate',
+        harnessTask: 'Review PR #8847 for security hotspots and coding standards compliance',
+        effortDays: 3,
+        lastDetected: '6 hours ago',
+      },
+      {
+        id: 'ad-debt-003',
+        title: 'Claims Eligibility API — undocumented breaking change risk',
+        type: 'api_deprecation',
+        severity: 'medium',
+        debtScore: 54,
+        status: 'open',
+        sourceSystem: 'API Catalog',
+        knowledgeNodeId: 'claims-api-spec',
+        affectedAsset: 'Claims Eligibility API v2.1',
+        project: 'Claims Modernization',
+        recurrence: '2 consumer teams reported contract ambiguity',
+        impact: 'Downstream claims modernization delays; API Test Agent cannot validate contracts',
+        boundAgentIds: [DEMO_AGENT_IDS.apiDesign, DEMO_AGENT_IDS.codeReview],
+        agentRole: {
+          [DEMO_AGENT_IDS.apiDesign]: 'Regenerates OpenAPI spec with deprecation notices and version changelog',
+          [DEMO_AGENT_IDS.codeReview]: 'Validates contract changes against API Catalog published versions',
+        },
+        remediation: 'API Design Agent to publish v2.2 contract with explicit deprecation path',
+        harnessTask: 'Generate updated OpenAPI for Claims Eligibility API with breaking change documentation',
+        effortDays: 4,
+        lastDetected: '3 days ago',
+      },
+      {
+        id: 'ad-debt-004',
+        title: 'Microservice patterns doc — 18 months stale',
+        type: 'documentation_gap',
+        severity: 'low',
+        debtScore: 32,
+        status: 'open',
+        sourceSystem: 'Confluence',
+        knowledgeNodeId: 'patterns',
+        affectedAsset: 'Microservice Patterns Library',
+        project: 'Enterprise',
+        recurrence: 'Referenced by 6 active initiatives',
+        impact: 'Architecture Review Agent grounding quality degraded for new projects',
+        boundAgentIds: [DEMO_AGENT_IDS.archReview],
+        agentRole: {
+          [DEMO_AGENT_IDS.archReview]: 'Flags stale knowledge sources during context assembly; recommends refresh',
+        },
+        remediation: 'Schedule Confluence refresh sprint; Architecture Review Agent to diff against current repo patterns',
+        harnessTask: 'Identify stale sections in Microservice Patterns vs live Architecture Repository',
+        effortDays: 8,
+        lastDetected: '2 weeks ago',
+      },
+    ],
+  },
+
+  ams: {
+    summary: {
+      debtIndex: 74,
+      trend: 'worsening',
+      criticalCount: 3,
+      agentAssigned: 3,
+      estimatedSavings: '$2.8M/yr MTTR reduction',
+    },
+    featuredDebtId: 'ams-debt-001',
+    items: [
+      {
+        id: 'ams-debt-001',
+        title: 'Recurring P1: Connection pool exhaustion on payment-gateway-service',
+        type: 'recurring_incident',
+        severity: 'critical',
+        debtScore: 96,
+        status: 'agent_assigned',
+        featured: true,
+        sourceSystem: 'ServiceNow',
+        knowledgeNodeId: 'inc-8847',
+        relatedIncidents: ['INC-2024-8847', 'INC-2023-4521', 'INC-2022-3891'],
+        similarityScore: 92,
+        affectedAsset: 'payment-gateway-service',
+        project: 'Platform Resilience Enhancement',
+        recurrence: '3 P1 incidents in 18 months — same root cause pattern',
+        impact: '1,247 users affected in latest incident; $420K estimated downtime cost',
+        boundAgentIds: [DEMO_AGENT_IDS.rca, DEMO_AGENT_IDS.incidentClass, DEMO_AGENT_IDS.runbook],
+        agentRole: {
+          [DEMO_AGENT_IDS.incidentClass]: 'Classified INC-2024-8847 as P1 and correlated with CHG-2024-4521 deployment within 60 seconds',
+          [DEMO_AGENT_IDS.rca]: 'Identified connection pool exhaustion via Splunk + Dynatrace; matched INC-2023-4521 at 92% similarity',
+          [DEMO_AGENT_IDS.runbook]: 'Drafting updated RB-PMT-014 with connection lifecycle hotfix steps post-RCA',
+        },
+        remediation: 'Rollback CHG-2024-4521 · Apply PR-8847 hotfix · Update KBA0008847 known error · Close recurrence debt',
+        harnessTask: 'Full RCA on INC-2024-8847 with historical pattern analysis and remediation runbook',
+        knowledgeLinks: ['inc-8847', 'inc-4521', 'chg-4521', 'kba-8847', 'ci-pgw'],
+        effortDays: 2,
+        lastDetected: 'Active now',
+        servicenowRecords: {
+          incident: 'INC-2024-8847',
+          change: 'CHG-2024-4521',
+          knownError: 'KBA0008847',
+          runbook: 'RB-PMT-014',
+        },
+      },
+      {
+        id: 'ams-debt-002',
+        title: 'KBA0008847 known error — remediation never closed',
+        type: 'runbook_gap',
+        severity: 'high',
+        debtScore: 82,
+        status: 'agent_assigned',
+        sourceSystem: 'ServiceNow',
+        knowledgeNodeId: 'kba-8847',
+        affectedAsset: 'KBA0008847',
+        project: 'Platform Resilience Enhancement',
+        recurrence: 'Known error open 14 months · linked to 3 incidents',
+        impact: 'Agents retrieve known error but permanent fix never deployed — debt compounds',
+        boundAgentIds: [DEMO_AGENT_IDS.rca, DEMO_AGENT_IDS.runbook],
+        agentRole: {
+          [DEMO_AGENT_IDS.rca]: 'Surfaces open known errors during RCA that match active incident signatures',
+          [DEMO_AGENT_IDS.runbook]: 'Publishes closure checklist to Confluence when remediation PR merges',
+        },
+        remediation: 'Close known error loop: merge PR-8847 → verify in prod → auto-update KBA status in ServiceNow',
+        harnessTask: 'Generate known error closure report for KBA0008847',
+        effortDays: 1,
+        lastDetected: '1 day ago',
+      },
+      {
+        id: 'ams-debt-003',
+        title: 'CHG failure rate spike — payment services deployment window',
+        type: 'change_failure',
+        severity: 'high',
+        debtScore: 76,
+        status: 'open',
+        sourceSystem: 'ServiceNow',
+        knowledgeNodeId: 'chg-4521',
+        affectedAsset: 'payment-gateway-service deployment pipeline',
+        project: 'Platform Resilience Enhancement',
+        recurrence: '40% change failure rate in Q2 vs 12% baseline',
+        impact: 'Incident Classification Agent routing overload; 2x alert volume',
+        boundAgentIds: [DEMO_AGENT_IDS.incidentClass],
+        agentRole: {
+          [DEMO_AGENT_IDS.incidentClass]: 'Elevates severity when change-incident correlation score exceeds 0.85',
+        },
+        remediation: 'Implement change freeze policy gate in deployment workflow; bind Policy Gate in harness workflow',
+        harnessTask: 'Analyze change-incident correlation for payment services Q2 deployments',
+        effortDays: 7,
+        lastDetected: '4 days ago',
+      },
+      {
+        id: 'ams-debt-004',
+        title: 'Runbook RB-PMT-014 outdated — missing connection pool section',
+        type: 'runbook_gap',
+        severity: 'medium',
+        debtScore: 48,
+        status: 'agent_assigned',
+        sourceSystem: 'Confluence',
+        knowledgeNodeId: 'rb-014',
+        affectedAsset: 'RB-PMT-014 Payment Gateway Runbook',
+        project: 'Platform Resilience Enhancement',
+        recurrence: 'Last updated 11 months ago',
+        impact: 'MTTR inflated by 12 min avg while on-call searches for correct procedure',
+        boundAgentIds: [DEMO_AGENT_IDS.runbook],
+        agentRole: {
+          [DEMO_AGENT_IDS.runbook]: 'Auto-drafts runbook updates from RCA output and publishes to Confluence + ServiceNow',
+        },
+        remediation: 'Runbook Assistant Agent publishing v2 of RB-PMT-014 with connection pool lifecycle section',
+        harnessTask: 'Draft RB-PMT-014 v2 from INC-2024-8847 RCA findings',
+        effortDays: 1,
+        lastDetected: '2 hours ago',
+      },
+    ],
+  },
+
+  qe: {
+    summary: {
+      debtIndex: 58,
+      trend: 'improving',
+      criticalCount: 1,
+      agentAssigned: 2,
+      estimatedSavings: '$680K/yr defect escape prevention',
+    },
+    items: [
+      {
+        id: 'qe-debt-001',
+        title: 'Prior Auth clinical scenarios — 13% requirements untested',
+        type: 'traceability_gap',
+        severity: 'critical',
+        debtScore: 88,
+        status: 'agent_assigned',
+        sourceSystem: 'Azure DevOps',
+        knowledgeNodeId: 'req-pa',
+        affectedAsset: 'Prior Auth Requirements (42 stories)',
+        project: 'Prior Authorization Automation',
+        recurrence: '6 stories in Sprint 14 have zero test coverage',
+        impact: 'Regulatory audit risk; clinical edge cases may reach production',
+        boundAgentIds: [DEMO_AGENT_IDS.regression, DEMO_AGENT_IDS.apiTest],
+        agentRole: {
+          [DEMO_AGENT_IDS.regression]: 'Generates synthetic clinical scenarios for uncovered user stories in Sprint 14',
+          [DEMO_AGENT_IDS.apiTest]: 'Creates contract tests for decision API endpoints tied to untested requirements',
+        },
+        remediation: 'Regression Test Agent running Sprint 14 gap-fill suite — 186 new scenarios targeted',
+        harnessTask: 'Generate regression tests for untested Prior Auth user stories in Sprint 14',
+        effortDays: 4,
+        lastDetected: '1 day ago',
+      },
+      {
+        id: 'qe-debt-002',
+        title: 'Prior Auth regression suite — 8% flaky test rate',
+        type: 'flaky_test',
+        severity: 'high',
+        debtScore: 71,
+        status: 'agent_assigned',
+        sourceSystem: 'Playwright',
+        knowledgeNodeId: 'regression-suite',
+        affectedAsset: 'Prior Auth Regression (186 tests)',
+        project: 'Prior Authorization Automation',
+        recurrence: '15 tests fail intermittently in CI pipeline',
+        impact: 'False negatives delay releases; team loses confidence in automation',
+        boundAgentIds: [DEMO_AGENT_IDS.regression],
+        agentRole: {
+          [DEMO_AGENT_IDS.regression]: 'Identifies flaky tests via run history; quarantines and proposes stabilization fixes',
+        },
+        remediation: 'Regression Test Agent quarantine report — stabilize timing-dependent clinical scenario tests',
+        harnessTask: 'Analyze flaky test patterns in Prior Auth regression suite',
+        effortDays: 3,
+        lastDetected: '2 days ago',
+      },
+      {
+        id: 'qe-debt-003',
+        title: 'Claims API contract tests — 22 endpoints uncovered',
+        type: 'coverage_gap',
+        severity: 'medium',
+        debtScore: 59,
+        status: 'open',
+        sourceSystem: 'Postman',
+        knowledgeNodeId: 'api-contract-tests',
+        affectedAsset: 'Claims Eligibility API contract suite',
+        project: 'Claims Modernization',
+        recurrence: 'API Catalog v2.1 added endpoints not reflected in test repo',
+        impact: 'API Test Agent cannot validate new endpoints until suite regenerated',
+        boundAgentIds: [DEMO_AGENT_IDS.apiTest],
+        agentRole: {
+          [DEMO_AGENT_IDS.apiTest]: 'Reads API Catalog and generates Postman collections for uncovered endpoints',
+        },
+        remediation: 'API Test Agent to sync contract tests with API Catalog v2.1',
+        harnessTask: 'Generate contract tests for 22 uncovered Claims API endpoints',
+        effortDays: 5,
+        lastDetected: '5 days ago',
+      },
+      {
+        id: 'qe-debt-004',
+        title: 'Defect cluster DEF-4400–4412 — payment path untested',
+        type: 'automation_debt',
+        severity: 'medium',
+        debtScore: 45,
+        status: 'open',
+        sourceSystem: 'TestRail',
+        knowledgeNodeId: 'defects',
+        affectedAsset: 'Payment path integration tests',
+        project: 'Claims Modernization',
+        recurrence: '13 defects in 30 days on same component cluster',
+        impact: 'Defect escape pattern mirrors AMS payment-gateway incident debt',
+        boundAgentIds: [DEMO_AGENT_IDS.regression, DEMO_AGENT_IDS.apiTest],
+        agentRole: {
+          [DEMO_AGENT_IDS.regression]: 'Prioritizes test generation for components with defect cluster signatures',
+          [DEMO_AGENT_IDS.apiTest]: 'Adds API-level tests for payment path defect hotspots',
+        },
+        remediation: 'Cross-link with AMS debt — add payment path E2E coverage',
+        harnessTask: 'Generate targeted tests for DEF-4400–4412 defect cluster',
+        effortDays: 6,
+        lastDetected: '1 week ago',
+      },
+    ],
+  },
+}
+
+export function getDebtProfile(category) {
+  return categoryDebt[category] ?? null
+}
+
+export function getDebtItem(category, debtId) {
+  const profile = categoryDebt[category]
+  return profile?.items.find((i) => i.id === debtId) ?? null
+}
+
+export function getFeaturedDebt(category) {
+  const profile = categoryDebt[category]
+  if (!profile) return null
+  if (profile.featuredDebtId) {
+    return profile.items.find((i) => i.id === profile.featuredDebtId) ?? null
+  }
+  return profile.items.find((i) => i.featured) ?? profile.items[0] ?? null
+}
+
+export function resolveDebtAgents(debtItem, agents) {
+  if (!debtItem?.boundAgentIds) return []
+  return debtItem.boundAgentIds
+    .map((id) => agents.find((a) => a.id === id))
+    .filter(Boolean)
+    .map((agent) => ({
+      ...agent,
+      role: debtItem.agentRole?.[agent.id] ?? 'Bound for remediation',
+    }))
+}

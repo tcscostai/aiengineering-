@@ -1,0 +1,19 @@
+{
+  "artifacts": [
+    { "type": "Requirements", "status": "generated", "quality": 94 },
+    { "type": "Architecture", "status": "generated", "quality": 91 },
+    { "type": "API Design", "status": "generated", "quality": 89 },
+    { "type": "React Components", "status": "in-progress", "quality": 87 },
+    { "type": "Backend Services", "status": "in-progress", "quality": 85 },
+    { "type": "Database", "status": "pending", "quality": 0 },
+    { "type": "Security", "status": "generated", "quality": 96 },
+    { "type": "Deployment", "status": "pending", "quality": 0 }
+  ],
+  "metrics": {
+    "quality": 91,
+    "reuse": 68,
+    "complexity": "Medium",
+    "velocity": 847
+  },
+  "codePreview": "// PriorAuthDecisionEngine.tsx\nexport function PriorAuthDecisionEngine() {\n  const { policy, clinicalData } = useEnterpriseContext();\n  const decision = useAgent('clinical-review-agent');\n  \n  return (\n    <DecisionPanel\n      policy={policy}\n      recommendation={decision.recommend}\n      confidence={decision.confidence}\n      auditTrail={decision.audit}\n    />\n  );\n}"
+}

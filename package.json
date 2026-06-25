@@ -1,0 +1,32 @@
+{
+  "name": "horizon-ai-engineering",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:pages": "VITE_BASE_PATH=/aiengineering-/ vite build && cp dist/index.html dist/404.html",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "preview:pages": "VITE_BASE_PATH=/aiengineering-/ vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "^12.41.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.0",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.9.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "oxlint": "^1.69.0",
+    "tailwindcss": "^4.3.1",
+    "vite": "^8.1.0"
+  }
+}

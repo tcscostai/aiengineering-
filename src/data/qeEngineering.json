@@ -1,0 +1,22 @@
+{
+  "testSuites": [
+    { "type": "Functional Tests", "count": 247, "automated": 89, "status": "passing" },
+    { "type": "Regression Tests", "count": 156, "automated": 94, "status": "passing" },
+    { "type": "API Tests", "count": 89, "automated": 100, "status": "passing" },
+    { "type": "Security Tests", "count": 34, "automated": 76, "status": "passing" },
+    { "type": "Performance Tests", "count": 12, "automated": 100, "status": "running" },
+    { "type": "Accessibility Tests", "count": 45, "automated": 82, "status": "passing" }
+  ],
+  "coverage": {
+    "overall": 87,
+    "functional": 92,
+    "api": 96,
+    "security": 78,
+    "performance": 65
+  },
+  "syntheticData": {
+    "recordsGenerated": 10000,
+    "scenarios": 47,
+    "quality": 94
+  }
+}

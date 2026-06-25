@@ -1,0 +1,48 @@
+{
+  "initiatives": [
+    {
+      "id": "init-001",
+      "title": "Prior Authorization Automation",
+      "description": "Reduce Prior Authorization turnaround time by implementing AI-assisted workflow automation.",
+      "status": "active",
+      "domain": "Healthcare",
+      "progress": 67,
+      "agents": 6,
+      "reuseRatio": 34,
+      "isPrimary": true
+    },
+    {
+      "id": "init-002",
+      "title": "Claims Modernization",
+      "description": "Modernize claims processing with AI agents leveraging existing enterprise capabilities.",
+      "status": "pending",
+      "domain": "Healthcare",
+      "progress": 0,
+      "agents": 0,
+      "reuseRatio": 88,
+      "isPrimary": false
+    },
+    {
+      "id": "init-003",
+      "title": "Platform Resilience Enhancement",
+      "description": "Enhance platform resilience through predictive incident management.",
+      "status": "planning",
+      "domain": "Infrastructure",
+      "progress": 12,
+      "agents": 2,
+      "reuseRatio": 56,
+      "isPrimary": false
+    }
+  ],
+  "businessRequest": {
+    "title": "Prior Authorization Turnaround Reduction",
+    "problem": "Prior Authorization turnaround time averages 72 hours, causing care delays and member dissatisfaction.",
+    "objective": "Reduce Prior Authorization turnaround time by implementing AI-assisted workflow automation.",
+    "expectedOutcomes": [
+      "50% reduction in turnaround time",
+      "90% first-pass accuracy",
+      "Full audit trail and governance compliance"
+    ],
+    "stakeholders": ["Chief Medical Officer", "VP Operations", "CIO"]
+  }
+}

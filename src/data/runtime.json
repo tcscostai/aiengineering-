@@ -1,0 +1,25 @@
+{
+  "runningAgents": [
+    { "id": "agent-1", "name": "Clinical Review Agent", "status": "running", "queue": 3, "progress": 67 },
+    { "id": "agent-2", "name": "RCA Agent", "status": "running", "queue": 1, "progress": 45 },
+    { "id": "agent-3", "name": "Architecture Review Agent", "status": "idle", "queue": 0, "progress": 100 },
+    { "id": "agent-4", "name": "Regression Test Agent", "status": "running", "queue": 7, "progress": 23 }
+  ],
+  "systemHealth": {
+    "cpu": 34,
+    "memory": 52,
+    "throughput": 847,
+    "errorRate": 0.02
+  },
+  "recentLogs": [
+    { "time": "14:42:18", "level": "info", "agent": "Clinical Review Agent", "message": "Policy validation complete - confidence 94%" },
+    { "time": "14:42:15", "level": "info", "agent": "RCA Agent", "message": "Root cause identified with 92% historical match" },
+    { "time": "14:42:10", "level": "warn", "agent": "Regression Test Agent", "message": "Performance test threshold approaching limit" },
+    { "time": "14:41:58", "level": "info", "agent": "Knowledge Fabric", "message": "Memory retrieval completed in 142ms" }
+  ],
+  "collaborations": [
+    { "from": "Clinical Review Agent", "to": "Policy Validation Agent", "type": "handoff" },
+    { "from": "RCA Agent", "to": "Knowledge Search Agent", "type": "query" },
+    { "from": "Regression Test Agent", "to": "Synthetic Data Agent", "type": "request" }
+  ]
+}

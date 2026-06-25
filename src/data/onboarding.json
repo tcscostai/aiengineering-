@@ -1,0 +1,144 @@
+{
+  "tracks": [
+    {
+      "id": "ad",
+      "name": "Application Development",
+      "example": "Architecture Review Agent",
+      "color": "#5ec8f2",
+      "steps": [
+        "Define purpose",
+        "Choose Agent Family",
+        "Select reusable skills",
+        "Bind enterprise knowledge",
+        "Connect tools",
+        "Design workflow",
+        "Evaluate",
+        "Governance",
+        "Certification",
+        "Publish"
+      ],
+      "skills": [
+        "Architecture Analysis",
+        "Code Review",
+        "API Design",
+        "Documentation",
+        "Security Analysis",
+        "Pattern Recognition"
+      ],
+      "knowledgeSources": [
+        "Architecture Repository",
+        "Coding Standards",
+        "API Catalog",
+        "Past Designs",
+        "Security Policies",
+        "Design Decisions"
+      ],
+      "tools": ["GitHub", "Azure DevOps", "Jira", "Confluence", "SonarQube"],
+      "evaluation": [
+        "Architecture Accuracy",
+        "Groundedness",
+        "Hallucination",
+        "Security",
+        "Cost",
+        "Latency"
+      ]
+    },
+    {
+      "id": "ams",
+      "name": "AMS",
+      "example": "RCA Agent",
+      "color": "#9b8bd4",
+      "steps": [
+        "Define purpose",
+        "Choose Agent Family",
+        "Select reusable skills",
+        "Bind enterprise knowledge",
+        "Connect tools",
+        "Design workflow",
+        "Evaluate",
+        "Governance",
+        "Certification",
+        "Publish"
+      ],
+      "skills": [
+        "Incident Classification",
+        "Log Analysis",
+        "Telemetry Correlation",
+        "RCA Generation",
+        "Knowledge Article",
+        "Change Impact"
+      ],
+      "knowledgeSources": [
+        "ServiceNow",
+        "Splunk",
+        "Dynatrace",
+        "Runbooks",
+        "Historical RCAs",
+        "Known Errors"
+      ],
+      "tools": ["ServiceNow", "Splunk", "Dynatrace", "AppDynamics", "Jira", "Confluence"],
+      "evaluation": [
+        "Incident Accuracy",
+        "RCA Quality",
+        "Knowledge Quality",
+        "Latency",
+        "Governance",
+        "Certification"
+      ]
+    },
+    {
+      "id": "qe",
+      "name": "Quality Engineering",
+      "example": "Regression Test Agent",
+      "color": "#3ecf9b",
+      "steps": [
+        "Define purpose",
+        "Choose Agent Family",
+        "Select reusable skills",
+        "Bind enterprise knowledge",
+        "Connect tools",
+        "Design workflow",
+        "Evaluate",
+        "Governance",
+        "Certification",
+        "Publish"
+      ],
+      "skills": [
+        "Test Design",
+        "Automation",
+        "Synthetic Data",
+        "Coverage Analysis",
+        "Defect Prediction",
+        "API Testing"
+      ],
+      "knowledgeSources": [
+        "Requirements",
+        "User Stories",
+        "Test Repository",
+        "Automation Assets",
+        "Release Notes",
+        "Defect History"
+      ],
+      "tools": ["Playwright", "Selenium", "Postman", "Azure DevOps", "Jenkins", "TestRail"],
+      "evaluation": [
+        "Coverage",
+        "Automation Readiness",
+        "Traceability",
+        "Quality",
+        "Governance",
+        "Certification"
+      ]
+    }
+  ],
+  "onboardingStages": [
+    "Draft",
+    "Configured",
+    "Knowledge Connected",
+    "Tool Connected",
+    "Workflow Designed",
+    "Evaluated",
+    "Governance Approved",
+    "Certified",
+    "Published"
+  ]
+}

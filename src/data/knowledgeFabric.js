@@ -1,0 +1,235 @@
+/** Enterprise Knowledge Fabric — per-category knowledge graphs for agent intelligence */
+
+export const MEMORY_LAYERS = [
+  { id: 'enterprise', label: 'Enterprise Memory', icon: 'building' },
+  { id: 'operational', label: 'Operational Memory', icon: 'activity' },
+  { id: 'decision', label: 'Decision Memory', icon: 'scale' },
+  { id: 'project', label: 'Project Memory', icon: 'folder' },
+  { id: 'reusable', label: 'Reusable Artifacts', icon: 'recycle' },
+]
+
+export const NODE_STYLES = {
+  source: { color: '#5ec8f2', label: 'Source System' },
+  incident: { color: '#f08984', label: 'Incident' },
+  ci: { color: '#9b8bd4', label: 'Configuration Item' },
+  change: { color: '#e8b84a', label: 'Change Record' },
+  telemetry: { color: '#3ecf9b', label: 'Telemetry' },
+  knowledge: { color: '#9b8bd4', label: 'Knowledge Article' },
+  runbook: { color: '#5ec8f2', label: 'Runbook' },
+  agent: { color: '#3ecf9b', label: 'Bound Agent' },
+  entity: { color: '#8b9cb0', label: 'Entity' },
+  architecture: { color: '#5ec8f2', label: 'Architecture' },
+  code: { color: '#3ecf9b', label: 'Code Asset' },
+  api: { color: '#5ec8f2', label: 'API' },
+  policy: { color: '#e8b84a', label: 'Policy' },
+  requirement: { color: '#9b8bd4', label: 'Requirement' },
+  test: { color: '#3ecf9b', label: 'Test Asset' },
+  defect: { color: '#f08984', label: 'Defect' },
+}
+
+const amsServiceNowIncident = {
+  id: 'ams_servicenow_incident',
+  title: 'ServiceNow Incident Intelligence',
+  subtitle: 'INC-2024-8847 · Payment Gateway Timeout — live knowledge graph from ITSM, CMDB, and observability',
+  featured: true,
+  sourceSystem: 'ServiceNow',
+  lastSynced: '2 min ago',
+  recordCount: 1847,
+  nodes: [
+    { id: 'sn-hub', label: 'ServiceNow ITSM', type: 'source', system: 'ServiceNow', records: 42800, x: 400, y: 0, meta: 'Instance: enterprise.service-now.com' },
+    { id: 'inc-8847', label: 'INC-2024-8847', type: 'incident', severity: 'P1', status: 'Investigating', records: 1, x: 400, y: 120, meta: 'Payment Gateway Timeout', highlight: true },
+    { id: 'ci-pgw', label: 'payment-gateway-service', type: 'ci', system: 'CMDB', records: 1, x: 120, y: 240, meta: 'Production · K8s deployment' },
+    { id: 'ci-claims', label: 'claims-processing-api', type: 'ci', system: 'CMDB', records: 1, x: 680, y: 240, meta: 'Downstream dependency' },
+    { id: 'chg-4521', label: 'CHG-2024-4521', type: 'change', status: 'Implemented', records: 1, x: 120, y: 380, meta: 'Deploy v2.4.1 · 14:28 UTC' },
+    { id: 'splunk', label: 'Splunk Log Index', type: 'telemetry', system: 'Splunk', records: 12400, x: 280, y: 380, meta: 'connection_pool_exhausted events' },
+    { id: 'dynatrace', label: 'Dynatrace APM', type: 'telemetry', system: 'Dynatrace', records: 890, x: 520, y: 380, meta: 'PurePath · 504 spike' },
+    { id: 'kba-8847', label: 'KBA0008847', type: 'knowledge', records: 1, x: 680, y: 380, meta: 'Known Error: Connection pool lifecycle' },
+    { id: 'inc-4521', label: 'INC-2023-4521', type: 'incident', severity: 'P1', records: 1, x: 840, y: 120, meta: '92% similarity match' },
+    { id: 'rb-014', label: 'RB-PMT-014', type: 'runbook', records: 1, x: 840, y: 240, meta: 'Rollback & hotfix procedure' },
+    { id: 'rca-agent', label: 'RCA Agent', type: 'agent', agentId: 'demo_ams_rca', records: 0, x: 280, y: 520, meta: 'Bound · Platform Resilience' },
+    { id: 'class-agent', label: 'Incident Classification Agent', type: 'agent', agentId: 'demo_ams_incident_class', records: 0, x: 520, y: 520, meta: 'Bound · Prior Authorization' },
+    { id: 'sre-group', label: 'SRE Operations', type: 'entity', records: 12, x: 0, y: 120, meta: 'Assignment group' },
+    { id: 'sla', label: 'P1 SLA · MTTR 18m', type: 'entity', records: 1, x: 800, y: 0, meta: 'Within target' },
+  ],
+  edges: [
+    { from: 'sn-hub', to: 'inc-8847', label: 'opened_in', strength: 1 },
+    { from: 'inc-8847', to: 'ci-pgw', label: 'affects', strength: 0.95 },
+    { from: 'inc-8847', to: 'ci-claims', label: 'impacts', strength: 0.88 },
+    { from: 'chg-4521', to: 'ci-pgw', label: 'deployed_to', strength: 0.92 },
+    { from: 'inc-8847', to: 'chg-4521', label: 'correlates', strength: 0.94 },
+    { from: 'splunk', to: 'inc-8847', label: 'evidence', strength: 0.97 },
+    { from: 'dynatrace', to: 'inc-8847', label: 'traces', strength: 0.91 },
+    { from: 'kba-8847', to: 'inc-8847', label: 'known_error', strength: 0.85 },
+    { from: 'inc-4521', to: 'inc-8847', label: 'similar_to', strength: 0.92 },
+    { from: 'rb-014', to: 'inc-8847', label: 'remediation', strength: 0.9 },
+    { from: 'rca-agent', to: 'inc-8847', label: 'analyzes', strength: 1 },
+    { from: 'class-agent', to: 'inc-8847', label: 'classified', strength: 1 },
+    { from: 'sn-hub', to: 'sre-group', label: 'routes', strength: 0.8 },
+    { from: 'sre-group', to: 'inc-8847', label: 'assigned', strength: 1 },
+    { from: 'sla', to: 'inc-8847', label: 'governs', strength: 0.75 },
+    { from: 'rca-agent', to: 'splunk', label: 'queries', strength: 0.9 },
+    { from: 'rca-agent', to: 'dynatrace', label: 'queries', strength: 0.88 },
+    { from: 'rca-agent', to: 'kba-8847', label: 'retrieves', strength: 0.86 },
+    { from: 'class-agent', to: 'sn-hub', label: 'ingests', strength: 0.95 },
+  ],
+}
+
+const categoryGraphs = {
+  ad: {
+    title: 'Application Development Knowledge Graph',
+    subtitle: 'Architecture, APIs, code, and design decisions — grounded context for AD agents',
+    memoryStats: { enterprise: 892, operational: 1240, decision: 284, project: 456, reusable: 678 },
+    sourceSystems: [
+      { name: 'GitHub', records: 12400, status: 'synced', latency: '45ms' },
+      { name: 'Confluence', records: 3200, status: 'synced', latency: '62ms' },
+      { name: 'Azure DevOps', records: 8900, status: 'synced', latency: '38ms' },
+      { name: 'Architecture Repository', records: 420, status: 'synced', latency: '120ms' },
+      { name: 'SonarQube', records: 2100, status: 'synced', latency: '55ms' },
+    ],
+    knowledgeDomains: [
+      'Architecture Repository', 'Coding Standards', 'API Catalog', 'Past Designs', 'Security Policies', 'Design Decisions',
+    ],
+    nodes: [
+      { id: 'gh', label: 'GitHub Enterprise', type: 'source', system: 'GitHub', records: 12400, x: 80, y: 60 },
+      { id: 'arch-repo', label: 'Architecture Repository', type: 'architecture', records: 420, x: 320, y: 40, highlight: true },
+      { id: 'api-catalog', label: 'API Catalog', type: 'api', records: 186, x: 560, y: 40 },
+      { id: 'standards', label: 'Coding Standards', type: 'policy', records: 94, x: 800, y: 60 },
+      { id: 'prior-auth-hld', label: 'Prior Auth HLD v3.2', type: 'architecture', records: 1, x: 200, y: 200, meta: 'Active initiative' },
+      { id: 'claims-api-spec', label: 'Claims Eligibility API', type: 'api', records: 1, x: 440, y: 200 },
+      { id: 'decision-engine', label: 'decision-engine-service', type: 'code', records: 1, x: 680, y: 200 },
+      { id: 'security-pol', label: 'HIPAA Security Baseline', type: 'policy', records: 1, x: 920, y: 200 },
+      { id: 'patterns', label: 'Microservice Patterns', type: 'knowledge', records: 48, x: 120, y: 360 },
+      { id: 'past-designs', label: 'Past Designs Archive', type: 'architecture', records: 156, x: 360, y: 360 },
+      { id: 'arch-agent', label: 'Architecture Review Agent', type: 'agent', agentId: 'demo_ad_arch_review', x: 600, y: 360 },
+      { id: 'api-agent', label: 'API Design Agent', type: 'agent', agentId: 'demo_ad_api_design', x: 840, y: 360 },
+      { id: 'code-agent', label: 'Code Review Agent', type: 'agent', agentId: 'demo_ad_code_review', x: 480, y: 500 },
+    ],
+    edges: [
+      { from: 'gh', to: 'decision-engine', label: 'source_of' },
+      { from: 'arch-repo', to: 'prior-auth-hld', label: 'contains' },
+      { from: 'prior-auth-hld', to: 'api-catalog', label: 'defines' },
+      { from: 'api-catalog', to: 'claims-api-spec', label: 'catalogs' },
+      { from: 'claims-api-spec', to: 'decision-engine', label: 'implements' },
+      { from: 'standards', to: 'decision-engine', label: 'governs' },
+      { from: 'security-pol', to: 'prior-auth-hld', label: 'constrains' },
+      { from: 'patterns', to: 'arch-repo', label: 'informs' },
+      { from: 'past-designs', to: 'prior-auth-hld', label: 'reuses' },
+      { from: 'arch-agent', to: 'arch-repo', label: 'queries' },
+      { from: 'arch-agent', to: 'prior-auth-hld', label: 'reviews' },
+      { from: 'api-agent', to: 'api-catalog', label: 'queries' },
+      { from: 'api-agent', to: 'claims-api-spec', label: 'generates' },
+      { from: 'code-agent', to: 'gh', label: 'scans' },
+      { from: 'code-agent', to: 'standards', label: 'enforces' },
+    ],
+    featuredSubgraph: null,
+  },
+
+  ams: {
+    title: 'AMS Operational Knowledge Graph',
+    subtitle: 'Incidents, telemetry, runbooks, and CMDB — real-time intelligence for production agents',
+    memoryStats: { enterprise: 1240, operational: 28400, decision: 412, project: 198, reusable: 934 },
+    sourceSystems: [
+      { name: 'ServiceNow', records: 42800, status: 'synced', latency: '28ms' },
+      { name: 'Splunk', records: 892000, status: 'synced', latency: '95ms' },
+      { name: 'Dynatrace', records: 45600, status: 'synced', latency: '41ms' },
+      { name: 'AppDynamics', records: 12400, status: 'synced', latency: '52ms' },
+      { name: 'Confluence', records: 2100, status: 'synced', latency: '68ms' },
+    ],
+    knowledgeDomains: ['ServiceNow', 'Splunk', 'Dynatrace', 'Runbooks', 'Historical RCAs', 'Known Errors'],
+    featuredSubgraph: amsServiceNowIncident,
+    nodes: [
+      { id: 'sn', label: 'ServiceNow ITSM', type: 'source', system: 'ServiceNow', records: 42800, x: 400, y: 40 },
+      { id: 'splunk-hub', label: 'Splunk Enterprise', type: 'source', system: 'Splunk', records: 892000, x: 80, y: 160 },
+      { id: 'dt', label: 'Dynatrace', type: 'source', system: 'Dynatrace', records: 45600, x: 720, y: 160 },
+      { id: 'open-incidents', label: 'Open P1/P2 Incidents', type: 'incident', records: 7, x: 400, y: 180, highlight: true },
+      { id: 'cmdb', label: 'CMDB · 340 CIs', type: 'ci', records: 340, x: 240, y: 300 },
+      { id: 'runbooks', label: 'Runbook Library', type: 'runbook', records: 186, x: 560, y: 300 },
+      { id: 'rca-hist', label: 'Historical RCAs', type: 'knowledge', records: 1247, x: 80, y: 420 },
+      { id: 'known-errors', label: 'Known Error DB', type: 'knowledge', records: 89, x: 720, y: 420 },
+      { id: 'rca-ag', label: 'RCA Agent', type: 'agent', agentId: 'demo_ams_rca', x: 280, y: 520 },
+      { id: 'runbook-ag', label: 'Runbook Assistant', type: 'agent', agentId: 'demo_ams_runbook', x: 520, y: 520 },
+    ],
+    edges: [
+      { from: 'sn', to: 'open-incidents', label: 'tracks' },
+      { from: 'sn', to: 'cmdb', label: 'cmdb' },
+      { from: 'open-incidents', to: 'cmdb', label: 'affects' },
+      { from: 'splunk-hub', to: 'open-incidents', label: 'correlates' },
+      { from: 'dt', to: 'open-incidents', label: 'observes' },
+      { from: 'open-incidents', to: 'runbooks', label: 'remediation' },
+      { from: 'rca-hist', to: 'open-incidents', label: 'similar_to' },
+      { from: 'known-errors', to: 'open-incidents', label: 'matches' },
+      { from: 'rca-ag', to: 'splunk-hub', label: 'queries' },
+      { from: 'rca-ag', to: 'rca-hist', label: 'retrieves' },
+      { from: 'rca-ag', to: 'open-incidents', label: 'analyzes' },
+      { from: 'runbook-ag', to: 'runbooks', label: 'publishes' },
+      { from: 'runbook-ag', to: 'known-errors', label: 'updates' },
+    ],
+  },
+
+  qe: {
+    title: 'Quality Engineering Knowledge Graph',
+    subtitle: 'Requirements traceability, test assets, defects, and automation — coverage intelligence for QE agents',
+    memoryStats: { enterprise: 560, operational: 8900, decision: 320, project: 678, reusable: 1120 },
+    sourceSystems: [
+      { name: 'Azure DevOps', records: 15600, status: 'synced', latency: '42ms' },
+      { name: 'TestRail', records: 4200, status: 'synced', latency: '58ms' },
+      { name: 'Playwright', records: 890, status: 'synced', latency: '35ms' },
+      { name: 'Postman', records: 340, status: 'synced', latency: '48ms' },
+      { name: 'Jenkins', records: 12400, status: 'synced', latency: '72ms' },
+    ],
+    knowledgeDomains: ['Requirements', 'User Stories', 'Test Repository', 'Automation Assets', 'Release Notes', 'Defect History'],
+    featuredSubgraph: null,
+    nodes: [
+      { id: 'ado', label: 'Azure DevOps', type: 'source', system: 'Azure DevOps', records: 15600, x: 80, y: 60 },
+      { id: 'req-pa', label: 'Prior Auth Requirements', type: 'requirement', records: 42, x: 320, y: 40, highlight: true },
+      { id: 'stories', label: 'User Stories · Sprint 14', type: 'requirement', records: 28, x: 560, y: 40 },
+      { id: 'test-repo', label: 'Test Repository', type: 'test', records: 4200, x: 800, y: 60 },
+      { id: 'regression-suite', label: 'Prior Auth Regression', type: 'test', records: 186, x: 200, y: 200 },
+      { id: 'api-contract-tests', label: 'API Contract Tests', type: 'test', records: 94, x: 440, y: 200 },
+      { id: 'automation', label: 'Playwright Automation', type: 'test', records: 890, x: 680, y: 200 },
+      { id: 'defects', label: 'Defect History', type: 'defect', records: 234, x: 920, y: 200 },
+      { id: 'release-notes', label: 'Release Notes v2.4', type: 'knowledge', records: 1, x: 120, y: 360 },
+      { id: 'synthetic', label: 'Synthetic Clinical Data', type: 'entity', records: 50000, x: 360, y: 360 },
+      { id: 'reg-agent', label: 'Regression Test Agent', type: 'agent', agentId: 'demo_qe_regression', x: 600, y: 360 },
+      { id: 'api-test-agent', label: 'API Test Agent', type: 'agent', agentId: 'demo_qe_api_test', x: 840, y: 360 },
+      { id: 'coverage', label: '87% Traceability', type: 'entity', records: 1, x: 480, y: 500 },
+    ],
+    edges: [
+      { from: 'ado', to: 'req-pa', label: 'contains' },
+      { from: 'req-pa', to: 'stories', label: 'decomposes' },
+      { from: 'stories', to: 'regression-suite', label: 'covers' },
+      { from: 'stories', to: 'api-contract-tests', label: 'covers' },
+      { from: 'test-repo', to: 'regression-suite', label: 'stores' },
+      { from: 'automation', to: 'regression-suite', label: 'executes' },
+      { from: 'defects', to: 'api-contract-tests', label: 'informs' },
+      { from: 'release-notes', to: 'regression-suite', label: 'scopes' },
+      { from: 'synthetic', to: 'regression-suite', label: 'feeds' },
+      { from: 'reg-agent', to: 'regression-suite', label: 'runs' },
+      { from: 'reg-agent', to: 'automation', label: 'drives' },
+      { from: 'api-test-agent', to: 'api-contract-tests', label: 'generates' },
+      { from: 'api-test-agent', to: 'test-repo', label: 'publishes' },
+      { from: 'coverage', to: 'req-pa', label: 'traces' },
+    ],
+  },
+}
+
+export function getKnowledgeGraph(category, view = 'overview') {
+  const graph = categoryGraphs[category]
+  if (!graph) return null
+  if (view === 'featured' && graph.featuredSubgraph) return graph.featuredSubgraph
+  return {
+    id: `${category}_overview`,
+    title: graph.title,
+    subtitle: graph.subtitle,
+    nodes: graph.nodes,
+    edges: graph.edges,
+  }
+}
+
+export function getCategoryFabricMeta(category) {
+  return categoryGraphs[category] ?? null
+}
+
+export function getAllCategories() {
+  return Object.keys(categoryGraphs)
+}

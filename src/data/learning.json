@@ -1,0 +1,17 @@
+{
+  "loop": [
+    { "id": "observe", "label": "Observe", "description": "Monitor agent performance and user feedback" },
+    { "id": "measure", "label": "Measure", "description": "Collect metrics across all evaluation dimensions" },
+    { "id": "evaluate", "label": "Evaluate", "description": "Assess quality, safety, and business impact" },
+    { "id": "improve", "label": "Improve", "description": "Fine-tune models, prompts, and knowledge bindings" },
+    { "id": "publish", "label": "Publish", "description": "Release improved versions to marketplace" },
+    { "id": "reuse", "label": "Reuse", "description": "Enable cross-initiative capability reuse" },
+    { "id": "scale", "label": "Scale", "description": "Expand to new domains and use cases" }
+  ],
+  "improvements": [
+    { "cycle": 1, "reuseRatio": 34, "agents": 6, "knowledge": 847 },
+    { "cycle": 2, "reuseRatio": 56, "agents": 9, "knowledge": 1247 },
+    { "cycle": 3, "reuseRatio": 72, "agents": 12, "knowledge": 1847 },
+    { "cycle": 4, "reuseRatio": 88, "agents": 14, "knowledge": 2847 }
+  ]
+}

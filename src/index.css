@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "reactflow/dist/style.css";
+
+@theme {
+  --color-cx-void: #040508;
+  --color-cx-deep: #080a10;
+  --color-cx-surface: #0c0f16;
+  --color-cx-panel: #10141d;
+  --color-cx-raised: #151a24;
+  --color-cx-line: rgba(148, 163, 184, 0.09);
+  --color-cx-border: rgba(148, 163, 184, 0.11);
+  --color-cx-border-strong: rgba(148, 163, 184, 0.2);
+  --color-cx-fg: #e8edf4;
+  --color-cx-fg-muted: #cbd5e1;
+  --color-cx-fg-dim: #8b9cb0;
+  --color-cx-accent: #5ec8f2;
+  --color-cx-accent2: #9b8bd4;
+  --color-cx-success: #3ecf9b;
+  --color-cx-warn: #e8b84a;
+  --color-cx-danger: #f08984;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --text-2xs: 0.625rem;
+  --shadow-inner-soft: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-dock: -8px 0 24px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-cx-void);
+  color: var(--color-cx-fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-2xs {
+  font-size: var(--text-2xs);
+  letter-spacing: 0.2em;
+}
+
+.glass-panel {
+  border-radius: 1rem;
+  border: 1px solid var(--color-cx-border);
+  background: color-mix(in srgb, var(--color-cx-panel) 75%, transparent);
+  backdrop-filter: blur(24px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-hero {
+  border-radius: 1.25rem;
+  border: 1px solid var(--color-cx-border-strong);
+  background: color-mix(in srgb, var(--color-cx-raised) 50%, transparent);
+  backdrop-filter: blur(24px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.mesh-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(94, 200, 242, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(155, 139, 212, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 90%, rgba(62, 207, 155, 0.04), transparent);
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.35);
+}
+
+.react-flow__node {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.react-flow__edge-path {
+  stroke: var(--color-cx-accent) !important;
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  background: var(--color-cx-panel) !important;
+  border: 1px solid var(--color-cx-border) !important;
+  border-radius: 0.75rem !important;
+}
+
+.react-flow__controls-button {
+  background: transparent !important;
+  border-bottom: 1px solid var(--color-cx-border) !important;
+  fill: var(--color-cx-fg-dim) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--color-cx-raised) !important;
+}

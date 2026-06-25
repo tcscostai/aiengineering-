@@ -1,0 +1,36 @@
+{
+  "nodeTypes": [
+    { "id": "requirement", "label": "Requirement", "color": "#5ec8f2" },
+    { "id": "architecture", "label": "Architecture", "color": "#9b8bd4" },
+    { "id": "development", "label": "Development", "color": "#3ecf9b" },
+    { "id": "review", "label": "Review", "color": "#e8b84a" },
+    { "id": "testing", "label": "Testing", "color": "#f08984" },
+    { "id": "deployment", "label": "Deployment", "color": "#5ec8f2" },
+    { "id": "knowledge", "label": "Knowledge Capture", "color": "#9b8bd4" },
+    { "id": "agent", "label": "AI Agent", "color": "#3ecf9b" }
+  ],
+  "defaultWorkflow": {
+    "name": "Prior Auth Automation Workflow",
+    "nodes": [
+      { "id": "1", "type": "requirement", "label": "Intake Requirements", "x": 0, "y": 200 },
+      { "id": "2", "type": "agent", "label": "Clinical Review Agent", "x": 250, "y": 100 },
+      { "id": "3", "type": "architecture", "label": "Policy Validation", "x": 250, "y": 300 },
+      { "id": "4", "type": "development", "label": "Decision Engine", "x": 500, "y": 200 },
+      { "id": "5", "type": "review", "label": "Human Approval", "x": 750, "y": 150 },
+      { "id": "6", "type": "testing", "label": "Compliance Check", "x": 750, "y": 300 },
+      { "id": "7", "type": "deployment", "label": "Publish Decision", "x": 1000, "y": 200 },
+      { "id": "8", "type": "knowledge", "label": "Capture Learning", "x": 1250, "y": 200 }
+    ],
+    "edges": [
+      { "from": "1", "to": "2" },
+      { "from": "1", "to": "3" },
+      { "from": "2", "to": "4" },
+      { "from": "3", "to": "4" },
+      { "from": "4", "to": "5" },
+      { "from": "4", "to": "6" },
+      { "from": "5", "to": "7" },
+      { "from": "6", "to": "7" },
+      { "from": "7", "to": "8" }
+    ]
+  }
+}

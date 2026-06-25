@@ -1,0 +1,150 @@
+/** Default prompt optimization rules — user overrides persisted via finOpsRulesService */
+
+export const ENFORCEMENT_MODES = [
+  { id: 'monitor', label: 'Monitor', description: 'Log violations only — no automatic changes' },
+  { id: 'recommend', label: 'Recommend', description: 'Surface suggestions in harness runs and FinOps alerts' },
+  { id: 'enforce', label: 'Enforce', description: 'Apply rules automatically before agent invocation' },
+]
+
+export const RULE_CATEGORIES = {
+  caching: { label: 'Caching', color: '#3ecf9b' },
+  compression: { label: 'Compression', color: '#5ec8f2' },
+  routing: { label: 'Model Routing', color: '#9b8bd4' },
+  truncation: { label: 'Context Control', color: '#e8b84a' },
+  dedup: { label: 'Deduplication', color: '#f472b6' },
+  batching: { label: 'Batching', color: '#60a5fa' },
+}
+
+export const DEFAULT_PROMPT_OPTIMIZATION_RULES = [
+  {
+    id: 'semantic_cache',
+    name: 'Semantic Prompt Cache',
+    description: 'Cache semantically similar prompts and reuse cached completions to cut input token spend.',
+    category: 'caching',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 4200,
+    params: {
+      similarityThreshold: 0.88,
+      ttlHours: 24,
+      minPromptTokens: 256,
+      maxCacheEntries: 5000,
+    },
+  },
+  {
+    id: 'prompt_compression',
+    name: 'Prompt Compression',
+    description: 'Strip redundant whitespace, collapse repeated system blocks, and compress JSON context payloads.',
+    category: 'compression',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 1800,
+    params: {
+      maxInputTokens: 8192,
+      stripWhitespace: true,
+      dedupeSystemBlocks: true,
+      compressJsonContext: true,
+    },
+  },
+  {
+    id: 'model_downgrade',
+    name: 'Tiered Model Routing',
+    description: 'Route low-complexity tasks to smaller models when estimated output stays under threshold.',
+    category: 'routing',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'recommend',
+    estimatedSavingsUsdMonthly: 6800,
+    params: {
+      maxOutputTokens: 220,
+      downgradeTo: 'gpt-4o-mini',
+      categories: ['ams', 'qe'],
+      requireConfidence: 0.92,
+    },
+  },
+  {
+    id: 'context_truncation',
+    name: 'Context Window Truncation',
+    description: 'Retain highest-salience context chunks when assembly exceeds token budget.',
+    category: 'truncation',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 2400,
+    params: {
+      maxContextTokens: 12000,
+      keepRecentTurns: 6,
+      preserveSystemPrompt: true,
+      salienceScoring: true,
+    },
+  },
+  {
+    id: 'prompt_dedup',
+    name: 'Duplicate Prompt Window',
+    description: 'Block identical prompt invocations within a sliding time window.',
+    category: 'dedup',
+    enabled: false,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 950,
+    params: {
+      windowMinutes: 5,
+      hashAlgorithm: 'sha256',
+      exemptAgents: [],
+    },
+  },
+  {
+    id: 'embedding_batch',
+    name: 'Embedding Batch Coalescing',
+    description: 'Batch embedding requests from knowledge sync and RAG retrieval pipelines.',
+    category: 'batching',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 1400,
+    params: {
+      batchSize: 64,
+      maxWaitMs: 250,
+      offPeakOnly: false,
+    },
+  },
+  {
+    id: 'output_cap',
+    name: 'Output Token Cap',
+    description: 'Hard cap on max completion tokens per harness run unless governance override is set.',
+    category: 'truncation',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 2100,
+    params: {
+      maxOutputTokens: 2048,
+      warnAtPct: 80,
+      allowOverride: true,
+    },
+  },
+  {
+    id: 'retry_budget',
+    name: 'Retry & Re-prompt Budget',
+    description: 'Limit automatic retries and re-prompt loops to prevent runaway token burn.',
+    category: 'routing',
+    enabled: true,
+    scope: 'all',
+    enforcement: 'enforce',
+    estimatedSavingsUsdMonthly: 1100,
+    params: {
+      maxRetries: 2,
+      maxReprompts: 1,
+      cooldownSeconds: 30,
+    },
+  },
+]
+
+export const SCOPE_OPTIONS = [
+  { id: 'all', label: 'All agents' },
+  { id: 'ad', label: 'AD only' },
+  { id: 'ams', label: 'AMS only' },
+  { id: 'qe', label: 'QE only' },
+]
