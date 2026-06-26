@@ -35,6 +35,17 @@ export const PLATFORM_USERS = [
     avatar: 'KA',
     permissions: ['*'],
   },
+  {
+    id: 'usr_ram',
+    username: 'Ram V',
+    password: 'admin123',
+    name: 'Ram V',
+    role: 'Administrator',
+    org: 'Horizon AI Engineering',
+    department: 'Platform Admin',
+    avatar: 'RV',
+    permissions: ['*'],
+  },
 ]
 
 /** @deprecated use PLATFORM_USERS */
