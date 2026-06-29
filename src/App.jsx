@@ -20,6 +20,7 @@ import AgentMarketplace from './pages/AgentMarketplace'
 import ContinuousLearning from './pages/ContinuousLearning'
 import ExecutiveInsights from './pages/ExecutiveInsights'
 import FinOpsCenter from './pages/FinOpsCenter'
+import ReverseEngineering from './pages/ReverseEngineering'
 
 const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '')
 
@@ -50,6 +51,7 @@ export default function App() {
               <Route path="harness" element={<AIHarnessEngineering />} />
               <Route path="knowledge" element={<KnowledgeFabric />} />
               <Route path="workflow" element={<WorkflowDesigner />} />
+              <Route path="reverse-engineering" element={<ReverseEngineering />} />
               <Route path="ad" element={<ADEngineering />} />
               <Route path="ams" element={<AMSEngineering />} />
               <Route path="qe" element={<QEEngineering />} />

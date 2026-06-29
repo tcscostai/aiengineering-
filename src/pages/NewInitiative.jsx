@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Rocket, ArrowRight, Plus, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { PageHeader } from '../components/ui/PageHeader'
 import { GlassPanel } from '../components/ui/GlassPanel'
@@ -13,6 +13,7 @@ const inputClass =
 export default function NewInitiative() {
   const { initiatives, createInitiative, deleteInitiative, addNotification } = useApp()
   const navigate = useNavigate()
+  const location = useLocation()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -21,6 +22,13 @@ export default function NewInitiative() {
     businessObjective: '',
     stakeholders: '',
   })
+
+  useEffect(() => {
+    if (location.state?.prefill) {
+      setForm((f) => ({ ...f, ...location.state.prefill }))
+      if (location.state.openForm) setShowForm(true)
+    }
+  }, [location.state])
 
   const handleSubmit = (e) => {
     e.preventDefault()

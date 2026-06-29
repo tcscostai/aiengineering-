@@ -21,8 +21,23 @@ React (Vite) · Tailwind CSS · Framer Motion · React Flow · Recharts · Lucid
 ```bash
 cd horizon-ai-engineering
 npm install
-npm run dev
+npm run dev:full    # UI + Reverse Engineering API (recommended)
+# or separately:
+npm run server      # RE API on :4174 — real Git clone & workspace scan
+npm run dev         # UI on :5173
 ```
+
+### Reverse Engineering Studio
+
+Navigate to **Engineering → Reverse Engineering** for migration discovery:
+
+- **Git Repository** — real `git clone` (public/private with token), branch & monorepo subpath
+- **Local Path** — scan any folder on the machine running the API server
+- **Upload ZIP** — extract and analyze a workspace archive
+
+Outputs: Code Universe graph, AI copilot Q&A, migration blueprint, Initiative/Governance handoff.
+
+> **Note:** GitHub Pages hosts the static UI only. Run `npm run server` locally (or deploy the `server/` API separately) for real scans.
 
 ## Agent Onboarding Flow
 

@@ -7,4 +7,14 @@ const repoBase = '/aiengineering-/'
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? (process.env.GITHUB_ACTIONS ? repoBase : '/'),
   plugins: [react(), tailwindcss()],
+  server: {
+    port: 5173,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4174',
+        changeOrigin: true,
+      },
+    },
+  },
 })

@@ -4,6 +4,7 @@ import {
   Cpu,
   Network,
   GitBranch,
+  ScanSearch,
   Code2,
   Headphones,
   FlaskConical,
@@ -34,6 +35,7 @@ export const navGroups = [
       { path: '/harness', label: 'AI Harness', shortLabel: 'Harness', icon: Cpu },
       { path: '/knowledge', label: 'Knowledge Fabric', shortLabel: 'Knowledge', icon: Network },
       { path: '/workflow', label: 'Workflow Designer', shortLabel: 'Workflows', icon: GitBranch },
+      { path: '/reverse-engineering', label: 'Reverse Engineering', shortLabel: 'Reverse Eng', icon: ScanSearch },
     ],
   },
   {
