@@ -2,6 +2,7 @@ import { loadJSON, saveJSON, generateId } from '../lib/storage'
 import { saveAgent, getAgentById } from './agentService'
 import onboardingData from '../data/onboarding.json'
 import { getPassThreshold } from './evaluationRulesService'
+import { getPlatformToolForAgent } from '../data/platformTools'
 
 const RUNS_KEY = 'evaluation_runs'
 const ACTIVITY_KEY = 'evaluation_activities'
@@ -125,13 +126,25 @@ function simulateDimensionScores(agent, dims) {
 
 export async function runAgentEvaluation(agent, onStep) {
   const dims = getCategoryEvaluationDims(agent.category)
+  const platform = getPlatformToolForAgent(agent)
+  const platformStep =
+    platform.id !== 'external'
+      ? {
+          id: 'platform',
+          label: `${platform.name} Plane Validation`,
+          detail: platform.evaluationNote,
+        }
+      : null
+  const steps = platformStep ? [platformStep, ...EVAL_STEPS] : EVAL_STEPS
+
   const run = {
     id: generateId('eval_run'),
     agentId: agent.id,
     agentName: agent.name,
     category: agent.category,
+    platformTool: platform.id !== 'external' ? platform.id : null,
     status: 'running',
-    steps: EVAL_STEPS.map((s) => ({ ...s, status: 'pending' })),
+    steps: steps.map((s) => ({ ...s, status: 'pending' })),
     createdAt: new Date().toISOString(),
   }
   saveEvaluationRun(run)
@@ -139,7 +152,9 @@ export async function runAgentEvaluation(agent, onStep) {
   logEvaluationActivity({
     type: 'run_started',
     title: `Evaluation started — ${agent.name}`,
-    detail: `${dims.length} dimensions · harness quality gate`,
+    detail: platform.id !== 'external'
+      ? `${dims.length} dimensions · ${platform.name} quality gate`
+      : `${dims.length} dimensions · harness quality gate`,
     status: 'running',
     agentId: agent.id,
   })
@@ -173,7 +188,9 @@ export async function runAgentEvaluation(agent, onStep) {
   logEvaluationActivity({
     type: 'run_completed',
     title: `Evaluation ${passed ? 'passed' : 'needs review'} — ${agent.name}`,
-    detail: `Overall score ${overall}/100 · ${passed ? 'meets' : 'below'} ${threshold} threshold`,
+    detail: platform.id !== 'external'
+      ? `Overall ${overall}/100 on ${platform.name} plane · ${passed ? 'meets' : 'below'} ${threshold} threshold`
+      : `Overall score ${overall}/100 · ${passed ? 'meets' : 'below'} ${threshold} threshold`,
     status: passed ? 'completed' : 'warn',
     agentId: agent.id,
     score: overall,

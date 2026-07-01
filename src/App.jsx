@@ -5,7 +5,7 @@ import { ProtectedRoute, PublicOnlyRoute } from './components/auth/ProtectedRout
 import { AppShell } from './shell/AppShell'
 import LoginPage from './pages/LoginPage'
 import ExecutiveDashboard from './pages/ExecutiveDashboard'
-import NewInitiative from './pages/NewInitiative'
+import NewWorkspaceProject from './pages/NewWorkspaceProject'
 import AgentOnboardingStudio from './pages/AgentOnboardingStudio'
 import AIHarnessEngineering from './pages/AIHarnessEngineering'
 import KnowledgeFabric from './pages/KnowledgeFabric'
@@ -46,7 +46,8 @@ export default function App() {
               }
             >
               <Route index element={<ExecutiveDashboard />} />
-              <Route path="initiative" element={<NewInitiative />} />
+              <Route path="workspace" element={<NewWorkspaceProject />} />
+              <Route path="initiative" element={<NewWorkspaceProject />} />
               <Route path="onboarding" element={<AgentOnboardingStudio />} />
               <Route path="harness" element={<AIHarnessEngineering />} />
               <Route path="knowledge" element={<KnowledgeFabric />} />

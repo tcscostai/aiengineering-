@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 import { useAgents } from '../hooks/useAgents'
 import { useInitiatives } from '../hooks/useInitiatives'
 import { useSkills } from '../hooks/useSkills'
+import { useEnterpriseFlow } from '../hooks/useEnterpriseFlow'
 
 const AppContext = createContext(null)
 
@@ -14,6 +15,7 @@ export function AppProvider({ children }) {
   const agentHook = useAgents()
   const initiativeHook = useInitiatives()
   const skillHook = useSkills()
+  const enterpriseFlow = useEnterpriseFlow(agentHook.agents, initiativeHook.initiatives)
 
   const addNotification = useCallback((message, type = 'info') => {
     const id = Date.now()
@@ -27,7 +29,7 @@ export function AppProvider({ children }) {
     const am = agentHook.metrics
     const im = initiativeHook.metrics
     return {
-      activeInitiatives: im.activeInitiatives,
+      activeInitiatives: im.activeWorkspaces ?? im.activeInitiatives,
       runningAgents: am.runningAgents,
       reusableSkills: skillHook.metrics.certified || am.reusableSkills,
       reusableWorkflows: am.publishedAgents,
@@ -52,14 +54,14 @@ export function AppProvider({ children }) {
   }, [agentHook.metrics])
 
   const currentInitiative = useMemo(() => {
-    const active = initiativeHook.initiatives.find((i) => i.status === 'active')
+    const active = initiativeHook.activeWorkspace
     if (active) return active
     return initiativeHook.initiatives[0] ?? {
       id: 'none',
-      title: 'No active initiative',
+      title: 'No active workspace',
       progress: 0,
     }
-  }, [initiativeHook.initiatives])
+  }, [initiativeHook.activeWorkspace, initiativeHook.initiatives])
 
   const value = {
     navExpanded,
@@ -85,8 +87,13 @@ export function AppProvider({ children }) {
     updateInitiative: initiativeHook.updateInitiative,
     deleteInitiative: initiativeHook.deleteInitiative,
     linkAgentToInitiative: initiativeHook.linkAgent,
+    setActiveWorkspace: initiativeHook.setActiveWorkspace,
+    refreshWorkspaceProgress: initiativeHook.refreshWorkspaceProgress,
     skillLibrary: skillHook.skills,
     skillMetrics: skillHook.metrics,
+    enterpriseFlow,
+    startEnterpriseFlow: enterpriseFlow.startFlow,
+    startDemoEnterpriseFlow: enterpriseFlow.startDemoFlow,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

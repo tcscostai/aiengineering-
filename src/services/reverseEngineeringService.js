@@ -20,7 +20,8 @@ export function saveScanToHistory(scanJob) {
   }
   const list = getScanHistory().filter((s) => s.id !== entry.id)
   list.unshift(entry)
-  saveJSON(HISTORY_KEY, list.slice(0, 20))
+  const deduped = list.filter((item, idx, arr) => arr.findIndex((x) => x.id === item.id) === idx)
+  saveJSON(HISTORY_KEY, deduped.slice(0, 20))
   return entry
 }
 

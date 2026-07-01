@@ -10,7 +10,7 @@ const inputClass =
 const DEMO_COBOL_PATH = '/Users/saurabhdubey/AI Engineering/horizon-ai-engineering/demo-workspaces/legacy-claims-cobol'
 
 const SAMPLE_REPOS = [
-  { label: 'COBOL Claims (demo)', localPath: DEMO_COBOL_PATH },
+  { label: 'COBOL Claims (legacy)', localPath: DEMO_COBOL_PATH },
   { label: 'Horizon (this app)', localPath: '/Users/saurabhdubey/AI Engineering/horizon-ai-engineering' },
   { label: 'React (public)', url: 'https://github.com/facebook/react.git', branch: 'main' },
   { label: 'Vite', url: 'https://github.com/vitejs/vite.git', branch: 'main' },
@@ -23,6 +23,7 @@ export function ScanSourcePanel({
   onScanGit,
   onScanPath,
   onScanZip,
+  onScanDemo,
   onCheckServer,
 }) {
   const [source, setSource] = useState('git')
@@ -54,12 +55,22 @@ export function ScanSourcePanel({
         <GlassPanel className="p-4 border-cx-warn/30 bg-cx-warn/5">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-cx-warn shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-cx-fg">Reverse Engineering API offline</p>
+            <div className="flex-1">
+              <p className="text-sm text-cx-fg">Reverse Engineering API offline — client-side analysis available</p>
               <p className="text-xs text-cx-fg-dim mt-1">
-                Start the scanner server: <code className="text-cx-accent">npm run server</code> (port 4174). Real Git clone and workspace analysis require this backend.
+                Scan the bundled legacy COBOL claims workspace below. For live Git clone scans use{' '}
+                <code className="text-cx-accent">npm run dev:full</code>.
               </p>
-              <button onClick={onCheckServer} className="mt-2 text-xs text-cx-accent hover:underline">Retry connection</button>
+              <button
+                type="button"
+                onClick={onScanDemo}
+                disabled={scanning}
+                className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl border border-cx-accent/40 bg-cx-accent/10 text-cx-accent text-xs hover:bg-cx-accent/20 disabled:opacity-50"
+              >
+                <Play className="w-3.5 h-3.5" />
+                Scan Legacy COBOL Claims Workspace
+              </button>
+              <button onClick={onCheckServer} className="mt-2 ml-3 text-xs text-cx-fg-dim hover:underline">Retry API</button>
             </div>
           </div>
         </GlassPanel>

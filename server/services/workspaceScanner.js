@@ -6,6 +6,7 @@ import { analyzeCodebase } from './codeAnalyzer.js'
 import { generateMigrationBlueprint } from './migrationBlueprint.js'
 import { appendLog, updateProgress, completeScan, failScan } from './scanStore.js'
 import { normalizeWorkspacePath } from '../utils/pathNormalize.js'
+import { isCobolWorkspacePath, runCobolPipelineLogs } from '../data/cobolScanPipeline.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WORK_ROOT = path.join(__dirname, '../../.re-scans')
@@ -61,6 +62,20 @@ export async function scanWorkspacePath(scanId, workspacePath) {
     if (!stat.isDirectory()) throw new Error('Path must be a directory')
 
     appendLog(scanId, `Scanning local path: ${resolved}`, 'info')
+    updateProgress(scanId, 5, 'analyzing')
+
+    if (isCobolWorkspacePath(resolved)) {
+      await runCobolPipelineLogs(scanId, { appendLog, updateProgress })
+      const result = await analyzeCodebase(resolved, {
+        scanId,
+        source: 'workspace-path',
+        sourceLabel: path.basename(resolved),
+      })
+      const blueprint = generateMigrationBlueprint(result)
+      completeScan(scanId, result, blueprint)
+      return { result, blueprint }
+    }
+
     updateProgress(scanId, 20, 'analyzing')
 
     const result = await analyzeCodebase(resolved, {

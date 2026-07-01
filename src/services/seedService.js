@@ -5,8 +5,11 @@ import { registerSkillsFromAgent } from './skillService'
 import { PREBUILT_WORKFLOWS } from '../data/prebuiltWorkflows'
 import { seedEvaluationData } from './evaluationService'
 import { seedGovernanceData } from './governanceService'
+import { setActiveWorkspace } from './initiativeService'
+import { getFlowRecord, startDemoEnterpriseFlow } from './enterpriseFlowService'
+import { buildDefaultDomainPlan } from '../data/workspaceDomains'
 
-export const PLATFORM_SEED_VERSION = 2
+export const PLATFORM_SEED_VERSION = 4
 const VERSION_KEY = 'platform_seed_version'
 
 function upsertAgents() {
@@ -29,11 +32,25 @@ function upsertAgents() {
   return existing.filter((a) => DEMO_AGENTS.some((d) => d.id === a.id))
 }
 
-function seedInitiatives() {
+function buildDemoDomainPlans(enabledDomains) {
+  return Object.fromEntries(
+    ['ad', 'ams', 'qe'].map((id) => {
+      const plan = buildDefaultDomainPlan(id)
+      return [
+        id,
+        {
+          ...plan,
+          enabled: enabledDomains.includes(id),
+          status: enabledDomains.includes(id) ? 'active' : 'planned',
+        },
+      ]
+    })
+  )
+}
+
+function upsertWorkspaces() {
   const existing = loadJSON('initiatives', [])
-  const demoIds = ['demo_init_prior_auth', 'demo_init_claims', 'demo_init_resilience']
-  const hasDemos = demoIds.every((id) => existing.some((i) => i.id === id))
-  if (hasDemos) return
+  const byId = new Map(existing.map((w) => [w.id, w]))
 
   const priorAuthAgents = [
     DEMO_AGENT_IDS.archReview,
@@ -50,9 +67,12 @@ function seedInitiatives() {
       id: 'demo_init_prior_auth',
       title: 'Prior Authorization Automation',
       description: 'Reduce Prior Authorization turnaround time by implementing AI-assisted workflow automation across AD, AMS, and QE agents.',
+      industry: 'Healthcare',
       domain: 'Healthcare',
       status: 'active',
       progress: 72,
+      domains: ['ad', 'ams', 'qe'],
+      domainPlans: buildDemoDomainPlans(['ad', 'ams', 'qe']),
       linkedAgentIds: priorAuthAgents,
       businessObjective: '50% reduction in turnaround time with 90% first-pass accuracy',
       stakeholders: 'Chief Medical Officer, VP Operations, CIO',
@@ -63,9 +83,12 @@ function seedInitiatives() {
       id: 'demo_init_claims',
       title: 'Claims Modernization',
       description: 'Modernize claims processing APIs with AI-assisted code review and API quality engineering.',
+      industry: 'Healthcare',
       domain: 'Healthcare',
-      status: 'active',
+      status: 'planning',
       progress: 48,
+      domains: ['ad', 'qe'],
+      domainPlans: buildDemoDomainPlans(['ad', 'qe']),
       linkedAgentIds: claimsAgents,
       businessObjective: 'Accelerate claims API delivery with automated quality gates',
       stakeholders: 'VP Engineering, Director of Integration',
@@ -76,9 +99,12 @@ function seedInitiatives() {
       id: 'demo_init_resilience',
       title: 'Platform Resilience Enhancement',
       description: 'Predictive incident management and automated RCA with knowledge capture runbooks.',
+      industry: 'Infrastructure',
       domain: 'Infrastructure',
-      status: 'active',
+      status: 'planning',
       progress: 58,
+      domains: ['ams'],
+      domainPlans: buildDemoDomainPlans(['ams']),
       linkedAgentIds: resilienceAgents,
       businessObjective: 'Reduce MTTR by 40% through agent-assisted incident response',
       stakeholders: 'Director of Operations, Head of SRE',
@@ -87,8 +113,18 @@ function seedInitiatives() {
     },
   ]
 
-  const merged = [...demos, ...existing.filter((i) => !demoIds.includes(i.id))]
-  saveJSON('initiatives', merged)
+  demos.forEach((seed) => {
+    const prev = byId.get(seed.id)
+    byId.set(seed.id, prev ? { ...prev, ...seed, createdAt: prev.createdAt ?? seed.createdAt } : seed)
+  })
+
+  saveJSON('initiatives', Array.from(byId.values()))
+  if (!loadJSON('active_workspace_id', null)) {
+    setActiveWorkspace('demo_init_prior_auth')
+  }
+  if (!getFlowRecord().workspaceId) {
+    startDemoEnterpriseFlow()
+  }
 }
 
 function seedWorkflows() {
@@ -104,7 +140,6 @@ function seedWorkflows() {
       return
     }
     if (!prev.metadata?.prebuilt) return
-    // Preserve user renames and canvas edits on pre-built templates
     if (prev.metadata?.userModified) return
     byId.set(seed.id, {
       ...seed,
@@ -179,15 +214,11 @@ function registerDemoSkills(demoAgents) {
     .forEach((agent) => registerSkillsFromAgent(agent))
 }
 
-/**
- * Seeds enterprise demo agents and related platform data for customer presentations.
- * Idempotent — safe to run on every app load; upserts demo records by stable IDs.
- */
 export function seedPlatformData() {
   const currentVersion = loadJSON(VERSION_KEY, 0)
   const demoAgents = upsertAgents()
 
-  seedInitiatives()
+  upsertWorkspaces()
   seedWorkflows()
   seedHarnessRuns(demoAgents)
   registerDemoSkills(demoAgents)

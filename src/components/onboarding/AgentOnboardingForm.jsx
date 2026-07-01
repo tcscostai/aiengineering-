@@ -7,6 +7,12 @@ import { SkillsPicker } from './SkillsPicker'
 import { validateStageAdvance, getStageProgress } from '../../services/agentService'
 import { verifyAgentConnection } from '../../services/connectionService'
 import { getStageLabel, getNextStage, STAGE_INDEX, RUNTIME_TYPES } from '../../lib/constants'
+import { getPlatformTool, getDefaultPlatformTool } from '../../data/platformTools'
+import { PlatformHookSelector } from './PlatformHookSelector'
+import { PlatformToolBadge } from './PlatformToolBadge'
+
+const PLATFORM_RUNTIMES = new Set(['sel_api', 'ignio_api', 'are_api'])
+const EXTERNAL_RUNTIMES = Object.values(RUNTIME_TYPES).filter((rt) => !PLATFORM_RUNTIMES.has(rt.id))
 
 function ChipSelect({ options, selected, onChange, colorClass = 'border-cx-border bg-cx-raised/50' }) {
   const toggle = (item) => {
@@ -47,7 +53,7 @@ function Field({ label, required, children, hint }) {
 const inputClass =
   'w-full px-3 py-2 rounded-xl border border-cx-border bg-cx-panel/50 text-sm text-cx-fg placeholder:text-cx-fg-dim focus:outline-none focus:border-cx-accent/40'
 
-export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onAdvance, onConnectionVerified }) {
+export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onAdvance, onConnectionVerified, workspaceProjects }) {
   const [draft, setDraft] = useState(agent)
   const [errors, setErrors] = useState([])
   const [saved, setSaved] = useState(false)
@@ -63,14 +69,33 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
     setDraft((d) => ({
       ...d,
       ...patch,
-      ...(patch.runtimeType !== undefined || patch.sourceLocation !== undefined || patch.entryPoint !== undefined
+      ...(patch.runtimeType !== undefined ||
+      patch.sourceLocation !== undefined ||
+      patch.entryPoint !== undefined ||
+      patch.platformTool !== undefined
         ? { connectionStatus: 'unverified', connectionVerifiedAt: null, connectionMessage: '' }
         : {}),
     }))
     setSaved(false)
   }
 
+  const platformTool = draft.platformTool ?? getDefaultPlatformTool(draft.category)
+  const isPlatformHooked = platformTool !== 'external'
   const runtime = RUNTIME_TYPES[draft.runtimeType]
+  const runtimeOptions = isPlatformHooked
+    ? [RUNTIME_TYPES[getPlatformTool(platformTool).runtimeType]].filter(Boolean)
+    : EXTERNAL_RUNTIMES
+
+  const handlePlatformChange = (nextPlatform) => {
+    const pt = getPlatformTool(nextPlatform)
+    update({
+      platformTool: nextPlatform,
+      runtimeType: nextPlatform === 'external' ? '' : pt.runtimeType,
+      sourceLocation: '',
+      entryPoint: '',
+      connectionEndpoint: '',
+    })
+  }
 
   const handleSave = () => {
     onSave(draft)
@@ -137,7 +162,7 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
             Register External Agent · {catalog.name}
           </p>
           <p className="text-xs text-cx-fg-dim">
-            This agent already exists outside Horizon (Python, Bedrock, Foundry, etc.). Register it for enterprise onboarding.
+            Register agents on SEL, Ignio, ARE, or external runtimes (Python, Bedrock, Foundry, APIs) for enterprise onboarding.
           </p>
         </div>
 
@@ -149,7 +174,20 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
             <input className={inputClass} value={draft.agentFamily} onChange={(e) => update({ agentFamily: e.target.value })} placeholder="e.g. Design Review, RCA" />
           </Field>
           <Field label="Project" required>
-            <input className={inputClass} value={draft.project} onChange={(e) => update({ project: e.target.value })} placeholder="e.g. Claims Modernization" />
+            {workspaceProjects?.length > 0 ? (
+              <select
+                className={inputClass}
+                value={draft.project}
+                onChange={(e) => update({ project: e.target.value })}
+              >
+                <option value="">Select workspace / project</option>
+                {workspaceProjects.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            ) : (
+              <input className={inputClass} value={draft.project} onChange={(e) => update({ project: e.target.value })} placeholder="e.g. Claims Modernization" />
+            )}
           </Field>
           <Field label="Team" required>
             <input className={inputClass} value={draft.team} onChange={(e) => update({ team: e.target.value })} placeholder="e.g. Platform Engineering" />
@@ -170,27 +208,42 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
       <GlassPanel className="p-6 space-y-4">
         <div className="flex items-center gap-2 mb-2">
           <Plug className="w-4 h-4 text-cx-accent" />
-          <p className="text-sm font-medium text-cx-fg">External Runtime Connection</p>
+          <p className="text-sm font-medium text-cx-fg">Runtime Connection</p>
+          <PlatformToolBadge platformTool={draft.platformTool} runtimeType={draft.runtimeType} />
         </div>
 
-        <Field label="Runtime Type" required hint="Where the agent is built and hosted">
-          <div className="flex flex-wrap gap-2">
-            {Object.values(RUNTIME_TYPES).map((rt) => (
-              <button
-                key={rt.id}
-                type="button"
-                onClick={() => update({ runtimeType: rt.id })}
-                className={`px-3 py-2 rounded-xl border text-xs transition-colors ${
-                  draft.runtimeType === rt.id
-                    ? 'border-cx-accent/50 bg-cx-accent/15 text-cx-accent'
-                    : 'border-cx-border text-cx-fg-dim hover:text-cx-fg-muted'
-                }`}
-              >
-                {rt.label}
-              </button>
-            ))}
-          </div>
-        </Field>
+        <PlatformHookSelector
+          category={draft.category}
+          value={platformTool}
+          onChange={handlePlatformChange}
+        />
+
+        {!isPlatformHooked && (
+          <Field label="Runtime Type" required hint="Where the external agent is built and hosted">
+            <div className="flex flex-wrap gap-2">
+              {runtimeOptions.map((rt) => (
+                <button
+                  key={rt.id}
+                  type="button"
+                  onClick={() => update({ runtimeType: rt.id })}
+                  className={`px-3 py-2 rounded-xl border text-xs transition-colors ${
+                    draft.runtimeType === rt.id
+                      ? 'border-cx-accent/50 bg-cx-accent/15 text-cx-accent'
+                      : 'border-cx-border text-cx-fg-dim hover:text-cx-fg-muted'
+                  }`}
+                >
+                  {rt.label}
+                </button>
+              ))}
+            </div>
+          </Field>
+        )}
+
+        {isPlatformHooked && runtime && (
+          <p className="text-xs text-cx-fg-muted">
+            Connected via <span style={{ color: runtime.color }}>{runtime.label}</span>
+          </p>
+        )}
 
         {runtime && (
           <>
@@ -200,7 +253,7 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
             <Field label={runtime.entryLabel} required>
               <input className={inputClass} value={draft.entryPoint} onChange={(e) => update({ entryPoint: e.target.value })} placeholder={runtime.entryPlaceholder} />
             </Field>
-            <Field label="Health Check URL" hint="Optional — validates reachability when accessible">
+            <Field label="Health Check URL" hint={isPlatformHooked ? `Optional — defaults to ${getPlatformTool(platformTool).healthPath} on base URL` : 'Optional — validates reachability when accessible'}>
               <input className={inputClass} value={draft.connectionEndpoint} onChange={(e) => update({ connectionEndpoint: e.target.value })} placeholder={runtime.healthPlaceholder} />
             </Field>
           </>
@@ -214,7 +267,7 @@ export function AgentOnboardingForm({ agent, catalog, librarySkills, onSave, onA
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-cx-accent/40 bg-cx-accent/10 text-cx-accent text-sm hover:bg-cx-accent/20 disabled:opacity-50"
           >
             {verifying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plug className="w-4 h-4" />}
-            Verify Runtime Connection
+            {isPlatformHooked ? `Verify ${getPlatformTool(platformTool).name} Connection` : 'Verify Runtime Connection'}
           </button>
           {draft.connectionStatus === 'verified' && (
             <div className="flex items-center gap-2 text-sm text-cx-success">

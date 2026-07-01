@@ -1,6 +1,6 @@
-# Legacy Claims Adjudication — COBOL Demo Workspace
+# Legacy Claims Adjudication — COBOL Workspace
 
-Synthetic mainframe-style healthcare claims codebase for **Horizon Reverse Engineering Studio** demos.
+Synthetic mainframe-style healthcare claims codebase for **Horizon Reverse Engineering Studio**.
 
 ## Scan this workspace
 
@@ -10,7 +10,7 @@ In **Reverse Engineering → Local Path**, use:
 /Users/saurabhdubey/AI Engineering/horizon-ai-engineering/demo-workspaces/legacy-claims-cobol
 ```
 
-Or click the **COBOL Claims (demo)** quick-start chip in the scan panel.
+Or click the **COBOL Claims (legacy)** quick-start chip in the scan panel.
 
 ## What's inside
 

@@ -1,6 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
+import { useFlowNavigate } from '../hooks/useFlowNavigate'
+import { EnterpriseFlowBanner } from '../components/flow/EnterpriseFlowPanel'
 import { NavRail } from './NavRail'
 import { TopBar } from './TopBar'
 import { StatusStrip } from './StatusStrip'
@@ -10,7 +12,8 @@ import { ParticleBackground } from '../components/ui/ParticleBackground'
 
 export function AppShell() {
   const location = useLocation()
-  const { focusMode, setFocusMode } = useApp()
+  const { focusMode, setFocusMode, enterpriseFlow } = useApp()
+  const { goToStep, continueFlow } = useFlowNavigate()
 
   if (focusMode) {
     return (
@@ -38,9 +41,14 @@ export function AppShell() {
           <main className="flex-1 min-h-0 overflow-y-auto relative z-0 mesh-bg grid-bg">
             <ParticleBackground count={35} />
             <div className="relative p-6 lg:p-8 min-h-full">
+              <EnterpriseFlowBanner
+                flow={enterpriseFlow}
+                onGoToStep={goToStep}
+                onContinue={continueFlow}
+              />
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={location.pathname + location.search}
+                  key={location.key}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}

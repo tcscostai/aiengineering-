@@ -43,6 +43,8 @@ import {
 } from '../services/evaluationService'
 import { useEvaluationRules } from '../hooks/useEvaluationRules'
 import { PlatformRulesPanel } from '../components/shared/PlatformRulesPanel'
+import { PlatformToolBadge } from '../components/onboarding/PlatformToolBadge'
+import { getPlatformToolForAgent } from '../data/platformTools'
 import {
   EVAL_ENFORCEMENT_MODES,
   EVAL_RULE_CATEGORIES,
@@ -305,8 +307,16 @@ export default function EvaluationCenter() {
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                   <div>
                     <p className="text-2xs uppercase text-cx-accent tracking-widest">Agent Evaluation</p>
-                    <h2 className="font-display text-lg text-cx-fg mt-1">{selectedAgent.name}</h2>
+                    <div className="flex items-center gap-2 flex-wrap mt-1">
+                      <h2 className="font-display text-lg text-cx-fg">{selectedAgent.name}</h2>
+                      <PlatformToolBadge platformTool={selectedAgent.platformTool} runtimeType={selectedAgent.runtimeType} />
+                    </div>
                     <p className="text-xs text-cx-fg-dim">{selectedAgent.project} · {selectedAgent.team}</p>
+                    {getPlatformToolForAgent(selectedAgent).id !== 'external' && (
+                      <p className="text-[10px] text-cx-fg-dim mt-1">
+                        {getPlatformToolForAgent(selectedAgent).evaluationNote}
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={handleRunEvaluation}

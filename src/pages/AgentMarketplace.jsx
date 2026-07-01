@@ -6,6 +6,7 @@ import { GlassPanel } from '../components/ui/GlassPanel'
 import { AgentDeployTerminal } from '../components/marketplace/AgentDeployTerminal'
 import { useApp } from '../context/AppContext'
 import { categoryToMarketplaceLabel, getRuntimeShort, RUNTIME_TYPES } from '../lib/constants'
+import { PlatformToolBadge } from '../components/onboarding/PlatformToolBadge'
 
 const categoryColors = { AD: '#5ec8f2', AMS: '#9b8bd4', QE: '#3ecf9b' }
 
@@ -43,6 +44,7 @@ export default function AgentMarketplace() {
           project: a.project,
           team: a.team,
           runtimeType: a.runtimeType,
+          platformTool: a.platformTool,
         }
       }),
     [publishedAgents]
@@ -145,8 +147,9 @@ export default function AgentMarketplace() {
                       {agent.category}
                     </span>
                     <h3 className="font-display text-base font-semibold text-cx-fg">{agent.name}</h3>
-                    <p className="text-xs text-cx-fg-dim font-mono">
+                    <p className="text-xs text-cx-fg-dim font-mono flex flex-wrap items-center gap-1">
                       v{agent.version} · {agent.project}
+                      <PlatformToolBadge platformTool={agent.platformTool} runtimeType={agent.runtimeType} size="xs" />
                       {agent.runtimeType && (
                         <span
                           className="ml-2 uppercase px-1 py-0.5 rounded text-[10px]"

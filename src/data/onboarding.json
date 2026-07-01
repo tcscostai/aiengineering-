@@ -33,7 +33,7 @@
         "Security Policies",
         "Design Decisions"
       ],
-      "tools": ["GitHub", "Azure DevOps", "Jira", "Confluence", "SonarQube"],
+      "tools": ["SEL", "GitHub", "Azure DevOps", "Jira", "Confluence", "SonarQube"],
       "evaluation": [
         "Architecture Accuracy",
         "Groundedness",
@@ -76,7 +76,7 @@
         "Historical RCAs",
         "Known Errors"
       ],
-      "tools": ["ServiceNow", "Splunk", "Dynatrace", "AppDynamics", "Jira", "Confluence"],
+      "tools": ["Ignio", "ARE", "ServiceNow", "Splunk", "Dynatrace", "AppDynamics", "Jira", "Confluence"],
       "evaluation": [
         "Incident Accuracy",
         "RCA Quality",
@@ -119,7 +119,7 @@
         "Release Notes",
         "Defect History"
       ],
-      "tools": ["Playwright", "Selenium", "Postman", "Azure DevOps", "Jenkins", "TestRail"],
+      "tools": ["SEL", "Playwright", "Selenium", "Postman", "Azure DevOps", "Jenkins", "TestRail"],
       "evaluation": [
         "Coverage",
         "Automation Readiness",

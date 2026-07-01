@@ -35,7 +35,10 @@ export default function AIHarnessEngineering() {
     if (location.state?.agentId) setInitialAgentId(location.state.agentId)
     if (location.state?.task) setInitialTask(location.state.task)
     if (location.state?.workflowId) setEditingWorkflowId(location.state.workflowId)
-  }, [location.state])
+    if (location.state?.flowStep?.startsWith('engineer_')) {
+      setTab('single')
+    }
+  }, [location.key, location.state])
 
   const stats = getStats(agents)
 

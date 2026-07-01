@@ -5,14 +5,15 @@ import { PageHeader } from '../components/ui/PageHeader'
 import { MetricCard } from '../components/ui/MetricCard'
 import { GlassPanel } from '../components/ui/GlassPanel'
 import { EcosystemNexus } from '../components/EcosystemNexus'
+import { EnterpriseFlowDashboard } from '../components/flow/EnterpriseFlowDashboard'
 import { CATEGORIES } from '../lib/constants'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function ExecutiveDashboard() {
-  const { metrics, health, agents, agentMetrics, initiatives } = useApp()
+  const { metrics, health, agents, agentMetrics, startDemoEnterpriseFlow, enterpriseFlow } = useApp()
 
   const cards = [
-    { label: 'Active Initiatives', value: metrics.activeInitiatives, icon: Rocket },
+    { label: 'Active Workspaces', value: metrics.activeInitiatives, icon: Rocket },
     { label: 'Agents In Progress', value: metrics.runningAgents, icon: Bot },
     { label: 'Reusable Skills', value: metrics.reusableSkills, icon: Puzzle },
     { label: 'Published Workflows', value: metrics.reusableWorkflows, icon: GitBranch },
@@ -39,8 +40,10 @@ export default function ExecutiveDashboard() {
       <PageHeader
         eyebrow="Command Center"
         title="Enterprise AI Engineering Health"
-        description="Live metrics from onboarded agents and engineering initiatives across AD, AMS, and QE."
+        description="Live metrics from onboarded agents and engineering workspaces across AD, AMS, and QE."
       />
+
+      <EnterpriseFlowDashboard flow={enterpriseFlow} onStartDemo={startDemoEnterpriseFlow} />
 
       {agentMetrics.totalAgents === 0 && (
         <GlassPanel className="p-4 mb-6 border-cx-accent/30 bg-cx-accent/5">

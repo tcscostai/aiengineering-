@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Download, Rocket, Shield, Cpu, AlertTriangle, RefreshCw, Target } from 'lucide-react'
+import { ArrowRight, Download, Rocket, Shield, Cpu, AlertTriangle, RefreshCw, Target, Code2 } from 'lucide-react'
 import { GlassPanel } from '../ui/GlassPanel'
 import { MigrationScoreRing } from './MigrationScoreRing'
 import { getBlueprintExportUrl, regenerateBlueprint } from '../../services/reverseEngineeringApi'
@@ -8,7 +8,7 @@ import { logGovernanceAction } from '../../services/governanceService'
 import { createInitiativeFromScan } from '../../services/reverseEngineeringService'
 import { MIGRATION_TARGET_OPTIONS, suggestTargetFromLanguages } from '../../data/migrationTargets'
 
-export function MigrationBlueprintPanel({ activeScan, onNotify }) {
+export function MigrationBlueprintPanel({ activeScan, onNotify, onGoToCodegen }) {
   const scan = activeScan?.result
   const [targetStack, setTargetStack] = useState(
     () => activeScan?.blueprint?.targetStack ?? suggestTargetFromLanguages(scan?.stats?.languages)
@@ -96,6 +96,13 @@ export function MigrationBlueprintPanel({ activeScan, onNotify }) {
           <p className="text-sm text-cx-fg-dim mt-1">{blueprint.targetDescription}</p>
           <p className="text-xs text-cx-fg-dim mt-2">{scan.summary}</p>
           <div className="flex flex-wrap gap-2 mt-4">
+            <button
+              type="button"
+              onClick={() => onGoToCodegen?.()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cx-success/40 bg-cx-success/10 text-xs text-cx-success hover:bg-cx-success/20"
+            >
+              <Code2 className="w-3.5 h-3.5" /> Generate migrated code
+            </button>
             <a
               href={getBlueprintExportUrl(activeScan.id)}
               target="_blank"
@@ -105,11 +112,11 @@ export function MigrationBlueprintPanel({ activeScan, onNotify }) {
               <Download className="w-3.5 h-3.5" /> Export Markdown
             </a>
             <Link
-              to="/initiative"
+              to="/workspace"
               state={{ prefill: { ...initiativePayload, domain: blueprint.targetLabel }, openForm: true }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cx-accent/40 bg-cx-accent/10 text-xs text-cx-accent"
             >
-              <Rocket className="w-3.5 h-3.5" /> Create Initiative
+              <Rocket className="w-3.5 h-3.5" /> Create Workspace
             </Link>
             <button onClick={pushToGovernance} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cx-border text-xs text-cx-fg-muted hover:border-cx-warn/40">
               <Shield className="w-3.5 h-3.5" /> Push risks to Governance

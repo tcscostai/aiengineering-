@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Scan, Network, Bot, Map, History } from 'lucide-react'
+import { Scan, Network, Bot, Map, History, Code2 } from 'lucide-react'
 import { PageHeader } from '../components/ui/PageHeader'
 import { ScanSourcePanel } from '../components/reverse/ScanSourcePanel'
 import { ScanTerminal } from '../components/reverse/ScanTerminal'
@@ -8,6 +8,7 @@ import { ScanInsightsRail } from '../components/reverse/ScanInsightsRail'
 import { CodeUniverseGraph } from '../components/reverse/CodeUniverseGraph'
 import { ReverseEngineerCopilot } from '../components/reverse/ReverseEngineerCopilot'
 import { MigrationBlueprintPanel } from '../components/reverse/MigrationBlueprintPanel'
+import { CodeGenerationPanel } from '../components/reverse/CodeGenerationPanel'
 import { useReverseEngineering } from '../hooks/useReverseEngineering'
 import { useApp } from '../context/AppContext'
 import { fetchScan } from '../services/reverseEngineeringApi'
@@ -17,6 +18,7 @@ const TABS = [
   { id: 'universe', label: 'Code Universe', icon: Network },
   { id: 'copilot', label: 'AI Reverse Engineer', icon: Bot },
   { id: 'blueprint', label: 'Migration Blueprint', icon: Map },
+  { id: 'codegen', label: 'Generated Code', icon: Code2 },
 ]
 
 export default function ReverseEngineering() {
@@ -37,6 +39,7 @@ export default function ReverseEngineering() {
     scanGit,
     scanPath,
     scanZip,
+    scanDemo,
     queryCopilot,
     setActiveScan,
   } = useReverseEngineering()
@@ -54,6 +57,13 @@ export default function ReverseEngineering() {
       addNotification(err.message, 'error')
     }
   }
+
+  useEffect(() => {
+    if (location.state?.tab) setTab(location.state.tab)
+    if (location.state?.runDemoScan && !scanning) {
+      wrapScan(() => scanDemo())()
+    }
+  }, [location.key, location.state?.flowNavTick, location.state?.runDemoScan, location.state?.tab])
 
   const loadHistoryScan = async (scanId) => {
     try {
@@ -79,7 +89,7 @@ export default function ReverseEngineering() {
 
       <ScanInsightsRail scan={activeScan} history={history} onSelectHistory={loadHistoryScan} />
 
-      <div className="flex flex-wrap gap-1 p-1 rounded-xl border border-cx-border bg-cx-panel/50 mb-6 mt-6 w-fit">
+      <div className="flex flex-wrap gap-1 p-1 rounded-xl border border-cx-border bg-cx-panel/50 mb-6 w-fit">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -108,6 +118,7 @@ export default function ReverseEngineering() {
             onScanGit={(p) => wrapScan(scanGit)(p)}
             onScanPath={(p) => wrapScan(scanPath)(p)}
             onScanZip={(f) => wrapScan(scanZip)(f)}
+            onScanDemo={() => wrapScan(scanDemo)()}
             onCheckServer={checkServer}
           />
           <ScanTerminal logs={logs} scanning={scanning} title="horizon-re scan pipeline" />
@@ -128,7 +139,15 @@ export default function ReverseEngineering() {
       )}
 
       {tab === 'blueprint' && (
-        <MigrationBlueprintPanel activeScan={activeScan} onNotify={addNotification} />
+        <MigrationBlueprintPanel
+          activeScan={activeScan}
+          onNotify={addNotification}
+          onGoToCodegen={() => setTab('codegen')}
+        />
+      )}
+
+      {tab === 'codegen' && (
+        <CodeGenerationPanel activeScan={activeScan} onNotify={addNotification} />
       )}
 
       {history.length > 0 && tab === 'scan' && (

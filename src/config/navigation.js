@@ -24,7 +24,7 @@ export const navGroups = [
     label: 'Overview',
     items: [
       { path: '/', label: 'Dashboard', shortLabel: 'Dashboard', icon: LayoutDashboard },
-      { path: '/initiative', label: 'New Initiative', shortLabel: 'Initiative', icon: Rocket },
+      { path: '/workspace', label: 'New Workspace / Project', shortLabel: 'Workspace', icon: Rocket },
     ],
   },
   {

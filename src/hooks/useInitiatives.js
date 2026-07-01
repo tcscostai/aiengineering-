@@ -21,6 +21,12 @@ export function useInitiatives() {
   return {
     initiatives,
     refresh,
+    activeWorkspace: initiativeService.getActiveWorkspace(),
+    setActiveWorkspace: (id) => {
+      initiativeService.setActiveWorkspace(id)
+      refresh()
+      return initiativeService.getInitiativeById(id)
+    },
     createInitiative: (data) => {
       const created = initiativeService.createInitiative(data)
       refresh()
@@ -37,6 +43,11 @@ export function useInitiatives() {
     },
     linkAgent: (initiativeId, agentId) => {
       const updated = initiativeService.linkAgentToInitiative(initiativeId, agentId)
+      refresh()
+      return updated
+    },
+    refreshWorkspaceProgress: (workspaceId, agents) => {
+      const updated = initiativeService.refreshWorkspaceProgress(workspaceId, agents)
       refresh()
       return updated
     },

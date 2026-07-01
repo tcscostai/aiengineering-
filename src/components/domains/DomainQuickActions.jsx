@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { UserPlus, Cpu, Network, GitBranch, DollarSign, AlertTriangle } from 'lucide-react'
+import { UserPlus, Cpu, Network, GitBranch, DollarSign, AlertTriangle, Layers } from 'lucide-react'
 import { GlassPanel } from '../ui/GlassPanel'
 
 const ACTIONS = [
+  { id: 'workspace', label: 'New Workspace', icon: Layers, path: '/workspace', hint: 'AD · AMS · QE project' },
   { id: 'onboard', label: 'Onboard Agent', icon: UserPlus, path: '/onboarding', hint: 'Register external agent' },
   { id: 'harness', label: 'Run Harness', icon: Cpu, path: '/harness', hint: 'Execute pipeline' },
   { id: 'knowledge', label: 'Knowledge Fabric', icon: Network, path: '/knowledge', hint: 'Graph + debt' },
@@ -30,7 +31,19 @@ export function DomainQuickActions({ category, metrics }) {
           <Link
             key={action.id}
             to={action.path}
-            state={action.id === 'harness' ? { category, tab: 'overview' } : action.id === 'knowledge' ? { category } : action.id === 'workflow' ? { category, tab: 'library' } : undefined}
+            state={
+              action.id === 'workspace'
+                ? { category, openForm: true }
+                : action.id === 'harness'
+                  ? { category, tab: 'overview' }
+                  : action.id === 'knowledge'
+                    ? { category }
+                    : action.id === 'workflow'
+                      ? { category, tab: 'library' }
+                      : action.id === 'onboard'
+                        ? { category }
+                        : undefined
+            }
             className="flex items-center gap-2 px-3 py-2 rounded-xl border border-cx-border bg-cx-raised/30 hover:border-cx-accent/40 hover:bg-cx-accent/5 transition-colors group"
           >
             <action.icon className="w-4 h-4 text-cx-accent shrink-0" />

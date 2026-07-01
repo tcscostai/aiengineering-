@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const KIND_COLORS = {
   info: '#8b9cb0',
@@ -8,8 +8,21 @@ const KIND_COLORS = {
   warn: '#e8b84a',
 }
 
+function normalizeLog(line) {
+  if (typeof line === 'string') {
+    const kind = line.startsWith('✓') ? 'ok' : line.includes('[HIGH]') || line.includes('risk') ? 'warn' : 'info'
+    return { ts: new Date().toISOString(), message: line, kind }
+  }
+  return {
+    ts: line.ts ?? new Date().toISOString(),
+    message: line.message ?? '',
+    kind: line.kind ?? 'info',
+  }
+}
+
 export function ScanTerminal({ logs = [], scanning = false, title = 'Scan pipeline' }) {
   const scrollRef = useRef(null)
+  const normalized = logs.map(normalizeLog)
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -32,15 +45,35 @@ export function ScanTerminal({ logs = [], scanning = false, title = 'Scan pipeli
           </motion.span>
         )}
       </div>
-      <div ref={scrollRef} className="h-56 overflow-y-auto p-4 font-mono text-[12px] leading-relaxed space-y-1">
-        {logs.length === 0 && (
+      <div ref={scrollRef} className="h-72 overflow-y-auto p-4 font-mono text-[11px] leading-relaxed space-y-1">
+        {normalized.length === 0 && (
           <p className="text-cx-fg-dim">Awaiting scan — connect a Git repo or local workspace to begin reverse engineering.</p>
         )}
-        {logs.map((line, i) => (
-          <div key={`${line.ts}-${i}`} style={{ color: KIND_COLORS[line.kind] ?? KIND_COLORS.info }}>
-            <span className="text-cx-fg-dim/60">[{new Date(line.ts).toLocaleTimeString()}]</span> {line.message}
-          </div>
-        ))}
+        <AnimatePresence initial={false}>
+          {normalized.map((line, i) => (
+            <motion.div
+              key={`${line.ts}-${i}-${line.message.slice(0, 20)}`}
+              initial={{ opacity: 0, x: -4 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.15 }}
+              style={{ color: KIND_COLORS[line.kind] ?? KIND_COLORS.info }}
+            >
+              <span className="text-cx-fg-dim/50 select-none">
+                [{new Date(line.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}]
+              </span>{' '}
+              {line.message}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        {scanning && normalized.length > 0 && (
+          <motion.div
+            className="text-cx-accent/70"
+            animate={{ opacity: [0.3, 1, 0.3] }}
+            transition={{ repeat: Infinity, duration: 1.2 }}
+          >
+            ▸ analyzing…
+          </motion.div>
+        )}
       </div>
     </div>
   )

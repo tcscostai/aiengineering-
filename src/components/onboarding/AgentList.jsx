@@ -1,6 +1,7 @@
 import { Trash2, ChevronRight } from 'lucide-react'
 import { CATEGORIES, getStageLabel, getRuntimeShort, RUNTIME_TYPES } from '../../lib/constants'
 import { getStageProgress } from '../../services/agentService'
+import { PlatformToolBadge } from './PlatformToolBadge'
 
 export function AgentList({ agents, selectedId, onSelect, onDelete, onCreate }) {
   return (
@@ -14,7 +15,7 @@ export function AgentList({ agents, selectedId, onSelect, onDelete, onCreate }) 
 
       {agents.length === 0 && (
         <p className="text-xs text-cx-fg-dim text-center py-6 leading-relaxed">
-          Register agents built in Python, Bedrock, Foundry, or APIs. Different teams and projects onboard here.
+          Register agents on SEL, Ignio, ARE, or external runtimes. Different teams and projects onboard here.
         </p>
       )}
 
@@ -43,6 +44,7 @@ export function AgentList({ agents, selectedId, onSelect, onDelete, onCreate }) 
                   {agent.project || 'No project'} · {agent.team || 'No team'}
                 </p>
                 <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  <PlatformToolBadge platformTool={agent.platformTool} runtimeType={agent.runtimeType} size="xs" />
                   {rt && (
                     <span
                       className="text-[10px] uppercase px-1.5 py-0.5 rounded font-mono"

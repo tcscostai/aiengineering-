@@ -10,6 +10,8 @@ import { useApp } from '../../context/AppContext'
 import { useHarness } from '../../hooks/useHarness'
 import { CATEGORIES } from '../../lib/constants'
 import { agentEligibleForHarness } from '../../lib/harnessConstants'
+import { getPlatformToolForAgent } from '../../data/platformTools'
+import { PlatformToolBadge } from '../onboarding/PlatformToolBadge'
 
 const inputClass =
   'w-full px-3 py-2 rounded-xl border border-cx-border bg-cx-panel/50 text-sm text-cx-fg placeholder:text-cx-fg-dim focus:outline-none focus:border-cx-accent/40'
@@ -123,8 +125,16 @@ export function SingleAgentHarness({ category, onCategoryChange, stats, initialA
                 <div className="flex flex-col md:flex-row md:items-end gap-4 mb-4">
                   <div className="flex-1">
                     <p className="text-2xs uppercase text-cx-accent mb-1">Execute Harness</p>
-                    <h2 className="font-display text-lg font-semibold text-cx-fg">{selectedAgent.name}</h2>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-display text-lg font-semibold text-cx-fg">{selectedAgent.name}</h2>
+                      <PlatformToolBadge platformTool={selectedAgent.platformTool} runtimeType={selectedAgent.runtimeType} />
+                    </div>
                     <p className="text-xs text-cx-fg-dim mt-1">{selectedAgent.purpose}</p>
+                    {getPlatformToolForAgent(selectedAgent).id !== 'external' && (
+                      <p className="text-[10px] text-cx-fg-dim mt-2">
+                        Orchestration routes through {getPlatformToolForAgent(selectedAgent).harnessLabel}
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={handleExecute}

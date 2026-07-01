@@ -1,5 +1,6 @@
 import { CATEGORIES, getRuntimeShort, RUNTIME_TYPES } from '../../lib/constants'
 import { agentEligibleForHarness } from '../../lib/harnessConstants'
+import { PlatformToolBadge } from '../onboarding/PlatformToolBadge'
 
 export function HarnessAgentSelector({ agents, category, selectedId, onSelect, runCounts = {} }) {
   const filtered = agents.filter(
@@ -34,7 +35,8 @@ export function HarnessAgentSelector({ agents, category, selectedId, onSelect, r
           >
             <p className="text-sm font-medium text-cx-fg truncate">{agent.name}</p>
             <p className="text-xs text-cx-fg-dim truncate">{agent.project} · {agent.team}</p>
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
+              <PlatformToolBadge platformTool={agent.platformTool} runtimeType={agent.runtimeType} size="xs" />
               {rt && (
                 <span
                   className="text-[10px] uppercase px-1.5 py-0.5 rounded font-mono"

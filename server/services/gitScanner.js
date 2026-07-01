@@ -5,6 +5,7 @@ import simpleGit from 'simple-git'
 import { analyzeCodebase } from './codeAnalyzer.js'
 import { generateMigrationBlueprint } from './migrationBlueprint.js'
 import { appendLog, updateProgress, completeScan, failScan } from './scanStore.js'
+import { isCobolWorkspacePath, runCobolPipelineLogs } from '../data/cobolScanPipeline.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WORK_ROOT = path.join(__dirname, '../../.re-scans')
@@ -53,10 +54,20 @@ export async function scanGitRepository(scanId, { url, branch = 'main', token, s
     }
 
     const repoName = url.replace(/\.git$/, '').split('/').pop() ?? 'repository'
+    const sourceLabel = `${repoName}${subpath ? `/${subpath}` : ''}@${branch}`
+
+    if (isCobolWorkspacePath(analyzeRoot) || isCobolWorkspacePath(subpath)) {
+      await runCobolPipelineLogs(scanId, { appendLog, updateProgress })
+      const result = await analyzeCodebase(analyzeRoot, { scanId, source: 'git', sourceLabel })
+      const blueprint = generateMigrationBlueprint(result)
+      completeScan(scanId, result, blueprint)
+      return { result, blueprint }
+    }
+
     const result = await analyzeCodebase(analyzeRoot, {
       scanId,
       source: 'git',
-      sourceLabel: `${repoName}${subpath ? `/${subpath}` : ''}@${branch}`,
+      sourceLabel,
     })
 
     appendLog(scanId, `Indexed ${result.stats.totalFiles} files — ${result.stats.languages.join(', ')}`, 'ok')

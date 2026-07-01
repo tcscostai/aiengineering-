@@ -6,6 +6,7 @@ import { PageHeader } from '../ui/PageHeader'
 import { GlassPanel } from '../ui/GlassPanel'
 import { ProgressBar } from '../ui/ProgressBar'
 import { CategoryAgentsPanel } from '../agents/CategoryAgentsPanel'
+import { DomainPlatformPlanes } from './DomainPlatformPlanes'
 import { DomainQuickActions } from './DomainQuickActions'
 import { DomainMetricsBar, DomainAgentRunner, DomainActivityFeed } from './DomainWorkspace'
 import { useApp } from '../../context/AppContext'
@@ -366,6 +367,8 @@ export function DomainEngineeringPage({ category }) {
       />
 
       <CategoryAgentsPanel agents={agents} category={category} />
+
+      <DomainPlatformPlanes category={category} />
 
       {category === 'ad' && <ADDomainPanel agents={agents} artifacts={artifacts} />}
       {category === 'ams' && (

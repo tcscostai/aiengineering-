@@ -1,3 +1,7 @@
+import { getMockScanJob } from './reverseEngineeringMock'
+import { isDemoScanId } from '../data/demoReScanResult'
+import { generateMigrationBlueprint } from '../lib/re/migrationBlueprintClient'
+
 const API_BASE = import.meta.env.VITE_RE_API_URL ?? ''
 
 async function request(path, options = {}) {
@@ -43,7 +47,32 @@ export async function startWorkspaceZipScan(file) {
 }
 
 export async function fetchScan(scanId) {
+  if (isDemoScanId(scanId)) {
+    const job = getMockScanJob(scanId)
+    if (job) return job
+  }
   return request(`/api/re/scans/${scanId}`)
+}
+
+export async function fetchBlueprint(scanId, targetStack) {
+  if (isDemoScanId(scanId)) {
+    const job = getMockScanJob(scanId)
+    if (!job?.result) throw new Error('Demo scan not found')
+    return generateMigrationBlueprint(job.result, { targetStack })
+  }
+  const qs = targetStack ? `?targetStack=${encodeURIComponent(targetStack)}` : ''
+  return request(`/api/re/scans/${scanId}/blueprint${qs}`)
+}
+
+export async function regenerateBlueprint(scanId, targetStack) {
+  if (isDemoScanId(scanId)) {
+    return fetchBlueprint(scanId, targetStack)
+  }
+  return request(`/api/re/scans/${scanId}/blueprint`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ targetStack }),
+  })
 }
 
 export async function askCopilot(scanId, question) {
@@ -51,19 +80,6 @@ export async function askCopilot(scanId, question) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ scanId, question }),
-  })
-}
-
-export async function fetchBlueprint(scanId, targetStack) {
-  const qs = targetStack ? `?targetStack=${encodeURIComponent(targetStack)}` : ''
-  return request(`/api/re/scans/${scanId}/blueprint${qs}`)
-}
-
-export async function regenerateBlueprint(scanId, targetStack) {
-  return request(`/api/re/scans/${scanId}/blueprint`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ targetStack }),
   })
 }
 

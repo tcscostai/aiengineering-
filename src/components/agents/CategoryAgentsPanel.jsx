@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Bot, ExternalLink, Play } from 'lucide-react'
 import { GlassPanel } from '../ui/GlassPanel'
 import { CATEGORIES, getRuntimeShort, RUNTIME_TYPES } from '../../lib/constants'
+import { PlatformToolBadge } from '../onboarding/PlatformToolBadge'
 
 export function CategoryAgentsPanel({ agents, category }) {
   const cat = CATEGORIES[category]
@@ -45,6 +46,7 @@ export function CategoryAgentsPanel({ agents, category }) {
               </div>
             </div>
             <div className="flex flex-wrap gap-1.5 mb-2">
+              <PlatformToolBadge platformTool={agent.platformTool} runtimeType={agent.runtimeType} size="xs" />
               <span
                 className="text-[10px] uppercase px-1.5 py-0.5 rounded"
                 style={{

@@ -1,6 +1,7 @@
 import { loadJSON, saveJSON, generateId } from '../lib/storage'
 import { STAGE_INDEX, getNextStage, ONBOARDING_STAGES } from '../lib/constants'
 import { registerSkillsFromAgent, recordSkillReuse, getAllSkills } from './skillService'
+import { getDefaultPlatformTool, getPlatformTool } from '../data/platformTools'
 
 const STORAGE_KEY = 'agents'
 
@@ -9,7 +10,9 @@ function emptyEvaluation(dimensions = []) {
 }
 
 function normalizeAgent(agent) {
+  const platformTool = agent.platformTool ?? getDefaultPlatformTool(agent.category ?? 'ad')
   return {
+    platformTool,
     runtimeType: '',
     sourceLocation: '',
     entryPoint: '',
@@ -19,22 +22,27 @@ function normalizeAgent(agent) {
     connectionMessage: '',
     reusedSkillRefs: [],
     ...agent,
+    platformTool: agent.platformTool ?? platformTool,
   }
 }
 
-export function createEmptyAgent(category, catalog) {
+export function createEmptyAgent(category, catalog, options = {}) {
+  const platformTool = options.platformTool ?? getDefaultPlatformTool(category)
+  const pt = getPlatformTool(platformTool)
   const now = new Date().toISOString()
   return {
     id: generateId('agent'),
     name: '',
     category,
-    project: '',
+    project: options.project ?? '',
+    workspaceId: options.workspaceId ?? '',
     team: '',
     owner: '',
     purpose: '',
     description: '',
     agentFamily: '',
-    runtimeType: '',
+    platformTool,
+    runtimeType: platformTool === 'external' ? '' : pt.runtimeType,
     sourceLocation: '',
     entryPoint: '',
     connectionEndpoint: '',

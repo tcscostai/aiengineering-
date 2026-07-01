@@ -46,7 +46,7 @@ export function RightDock() {
               <GlassPanel className="p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4 text-cx-accent2" />
-                  <span className="text-xs font-medium text-cx-fg">Active Initiative</span>
+                  <span className="text-xs font-medium text-cx-fg">Active Workspace</span>
                 </div>
                 <p className="text-sm text-cx-fg mb-2">{currentInitiative.title}</p>
                 <div className="h-1.5 rounded-full bg-cx-border overflow-hidden">

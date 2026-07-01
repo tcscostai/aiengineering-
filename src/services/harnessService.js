@@ -1,6 +1,7 @@
 import { loadJSON, saveJSON, generateId } from '../lib/storage'
 import { HARNESS_PIPELINE, SOURCE_TOOL_MAP } from '../lib/harnessConstants'
 import { getAllSkills } from './skillService'
+import { getPlatformToolForAgent } from '../data/platformTools'
 
 const RUNS_KEY = 'harness_runs'
 const CONFIGS_KEY = 'harness_configs'
@@ -75,12 +76,15 @@ function buildContextItems(agent) {
 }
 
 function buildPromptBundle(agent, task) {
+  const platform = getPlatformToolForAgent(agent)
   return {
     system: `You are ${agent.name} (${agent.agentFamily || agent.category.toUpperCase()}). ${agent.purpose}`,
     skills: agent.skills,
     task: task || `Execute ${agent.name} standard operation for ${agent.project}`,
     runtime: agent.runtimeType,
     entryPoint: agent.entryPoint,
+    platformPlane: platform.id !== 'external' ? platform.harnessLabel : null,
+    invokeVia: platform.id !== 'external' ? `${platform.name} @ ${agent.sourceLocation}` : agent.entryPoint,
     tokensEstimated: 800 + agent.skills.length * 120 + agent.knowledgeSources.length * 90,
   }
 }
@@ -136,10 +140,12 @@ function executeStep(stepId, agent, ctx) {
     }
     case 'prompt': {
       const bundle = buildPromptBundle(agent, ctx.task)
+      const platform = getPlatformToolForAgent(agent)
+      const planeNote = platform.id !== 'external' ? ` via ${platform.harnessLabel}` : ''
       return {
         ...base,
         label: 'Prompt Assembly',
-        output: `Prompt assembled — ${bundle.tokensEstimated} est. tokens, ${bundle.skills.length} skills injected`,
+        output: `Prompt assembled${planeNote} — ${bundle.tokensEstimated} est. tokens, ${bundle.skills.length} skills injected`,
         promptBundle: bundle,
         durationMs: 200 + bundle.skills.length * 30,
       }
@@ -221,15 +227,20 @@ function executeStep(stepId, agent, ctx) {
       }
     }
     case 'obs': {
+      const platform = getPlatformToolForAgent(agent)
       return {
         ...base,
         label: 'Observability',
-        output: `Trace ID ${generateId('trace')} · metrics exported to enterprise telemetry`,
+        output: platform.id !== 'external'
+          ? `Trace exported to ${platform.name} telemetry · enterprise Horizon metrics`
+          : `Trace ID ${generateId('trace')} · metrics exported to enterprise telemetry`,
         telemetry: {
           traceId: generateId('trace'),
           agentId: agent.id,
           runtime: agent.runtimeType,
           category: agent.category,
+          platformTool: platform.id !== 'external' ? platform.id : null,
+          platformPlane: platform.harnessLabel,
         },
         durationMs: 90,
       }
@@ -256,12 +267,14 @@ function executeStep(stepId, agent, ctx) {
 
 export function createHarnessRun(agent, task = '') {
   const metrics = computeHarnessMetrics(agent)
+  const platform = getPlatformToolForAgent(agent)
   return {
     id: generateId('run'),
     agentId: agent.id,
     agentName: agent.name,
     category: agent.category,
     runtimeType: agent.runtimeType,
+    platformTool: platform.id !== 'external' ? platform.id : null,
     status: 'pending',
     task: task.trim() || `Harness execution for ${agent.name}`,
     currentStepIndex: -1,
@@ -273,7 +286,13 @@ export function createHarnessRun(agent, task = '') {
       durationMs: null,
     })),
     metrics,
-    logs: [{ time: new Date().toISOString(), level: 'info', message: `Harness run initialized for ${agent.name}` }],
+    logs: [{
+      time: new Date().toISOString(),
+      level: 'info',
+      message: platform.id !== 'external'
+        ? `Harness run initialized for ${agent.name} on ${platform.harnessLabel}`
+        : `Harness run initialized for ${agent.name}`,
+    }],
     createdAt: new Date().toISOString(),
     completedAt: null,
   }
