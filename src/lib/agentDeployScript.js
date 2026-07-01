@@ -24,7 +24,7 @@ export function buildAgentDeploySession(agent) {
 
   const header = [
     { kind: 'dim', text: 'Last login: Thu Jun 25 09:14:22 on ttys003' },
-    { kind: 'out', text: 'Horizon AI Engineering CLI v2.4.0 — enterprise agent runtime' },
+    { kind: 'out', text: 'TCS AI Engineering Studio CLI v2.4.0 — enterprise agent runtime' },
     { kind: 'out', text: '────────────────────────────────────────────────────────' },
   ]
 
@@ -46,7 +46,7 @@ export function buildAgentDeploySession(agent) {
     { kind: 'dim', text: `  marketplace_reuse_count: ${deployNum}` },
   ]
 
-  const baseCmd = `horizon agents deploy --id ${id} --runtime ${runtime} --project "${project}"`
+  const baseCmd = `tcs agents deploy --id ${id} --runtime ${runtime} --project "${project}"`
 
   let runtimeBlock = []
 
@@ -57,14 +57,14 @@ export function buildAgentDeploySession(agent) {
         { kind: 'out', text: '→ Resolving agent manifest from marketplace catalog…' },
         { kind: 'ok', text: `✓ ${name} v${ver} · ${getRuntimeShort(runtime)} · verified` },
         { kind: 'out', text: `→ Cloning runtime source: ${src}` },
-        { kind: 'dim', text: 'Cloning into horizon-agent-workspace…' },
+        { kind: 'dim', text: 'Cloning into tcs-agent-workspace…' },
         { kind: 'dim', text: 'remote: Enumerating objects: 847, done.' },
         { kind: 'ok', text: '✓ Repository checked out @ main (a3f8c21)' },
         { kind: 'out', text: `→ Validating entry point: ${entry}` },
         { kind: 'ok', text: '✓ Module import successful · handler resolved' },
         { kind: 'out', text: '→ Creating Python 3.11 virtual environment…' },
         { kind: 'dim', text: 'Installing dependencies from requirements.txt…' },
-        { kind: 'ok', text: '✓ 42 packages installed · boto3, pydantic, horizon-sdk' },
+        { kind: 'ok', text: '✓ 42 packages installed · boto3, pydantic, tcs-sdk' },
         { kind: 'out', text: agent.connectionEndpoint ? `→ Health check: ${agent.connectionEndpoint}` : '→ Skipping external health (internal network)' },
         { kind: 'ok', text: agent.connectionEndpoint ? '✓ Health endpoint validated (format OK)' : '✓ Runtime reference validated offline' },
       ]
@@ -73,8 +73,8 @@ export function buildAgentDeploySession(agent) {
     case 'bedrock':
       runtimeBlock = [
         { kind: 'prompt', text: baseCmd },
-        { kind: 'out', text: '→ Authenticating AWS profile: horizon-prod (us-east-1)…' },
-        { kind: 'ok', text: '✓ STS session established · role: HorizonBedrockAgentDeploy' },
+        { kind: 'out', text: '→ Authenticating AWS profile: tcs-prod (us-east-1)…' },
+        { kind: 'ok', text: '✓ STS session established · role: TCSBedrockAgentDeploy' },
         { kind: 'out', text: `→ Resolving Bedrock agent ARN: ${src}` },
         { kind: 'ok', text: `✓ Agent found · alias: ${entry}` },
         { kind: 'out', text: '→ Invoking bedrock-agent-runtime prepare…' },
@@ -89,7 +89,7 @@ export function buildAgentDeploySession(agent) {
     case 'azure_foundry':
       runtimeBlock = [
         { kind: 'prompt', text: baseCmd },
-        { kind: 'out', text: '→ Azure CLI login: horizon-foundry-sp (subscription a1b2c3d4)…' },
+        { kind: 'out', text: '→ Azure CLI login: tcs-foundry-sp (subscription a1b2c3d4)…' },
         { kind: 'ok', text: '✓ Token acquired · Cognitive Services scope' },
         { kind: 'out', text: `→ Resolving Foundry resource: ${src.split('/').slice(-2).join('/')}` },
         { kind: 'ok', text: `✓ Project agent resource located` },
@@ -107,7 +107,7 @@ export function buildAgentDeploySession(agent) {
         { kind: 'prompt', text: baseCmd },
         { kind: 'out', text: `→ Base URL: ${src}` },
         { kind: 'out', text: `→ Invoke path: ${entry}` },
-        { kind: 'ok', text: '✓ TLS certificate valid · horizon.internal CA' },
+        { kind: 'ok', text: '✓ TLS certificate valid · tcs.internal CA' },
         { kind: 'out', text: '→ OAuth2 client_credentials token exchange…' },
         { kind: 'ok', text: '✓ Access token issued (expires 3600s)' },
         { kind: 'out', text: '→ Probe POST /invoke with harness handshake payload…' },
@@ -120,7 +120,7 @@ export function buildAgentDeploySession(agent) {
       runtimeBlock = [
         { kind: 'prompt', text: baseCmd },
         { kind: 'out', text: `→ Pulling image: ${src}` },
-        { kind: 'dim', text: 'Pulling from horizonacr.azurecr.io…' },
+        { kind: 'dim', text: 'Pulling from tcsacr.azurecr.io…' },
         { kind: 'ok', text: '✓ Image pulled · sha256:4f9c…ab12 · 412MB' },
         { kind: 'out', text: '→ kubectl apply -n qe-agents -f deployment.yaml' },
         { kind: 'dim', text: 'deployment.apps/' + slug(name) + ' configured' },

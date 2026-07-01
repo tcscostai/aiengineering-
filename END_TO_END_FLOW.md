@@ -1,6 +1,6 @@
 # End-to-End Enterprise Flow — User Walkthrough
 
-Complete the full **Workspace → SEL · Ignio · ARE → Engineering → Operations → Reverse Engineering** journey in Horizon with the sample values below.
+Complete the full **Workspace → SEL · Ignio · ARE → Engineering → Operations → Reverse Engineering** journey in TCS with the sample values below.
 
 **Live demo:** [https://tcscostai.github.io/aiengineering-/](https://tcscostai.github.io/aiengineering-/)  
 **Local:** `npm run dev:full` → [http://localhost:5173](http://localhost:5173)

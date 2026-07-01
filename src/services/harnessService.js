@@ -232,7 +232,7 @@ function executeStep(stepId, agent, ctx) {
         ...base,
         label: 'Observability',
         output: platform.id !== 'external'
-          ? `Trace exported to ${platform.name} telemetry · enterprise Horizon metrics`
+          ? `Trace exported to ${platform.name} telemetry · enterprise TCS metrics`
           : `Trace ID ${generateId('trace')} · metrics exported to enterprise telemetry`,
         telemetry: {
           traceId: generateId('trace'),

@@ -87,7 +87,7 @@ export function generateMigrationBlueprint(scan, options = {}) {
     label: `To-Be (${target.label})`,
     architecture: target.architecture,
     modules: modules.slice(0, 6).map((m) => `${m.label}${target.moduleSuffix}`),
-    integrations: ['Horizon AI Harness', 'Knowledge Fabric', 'Governance gates', ...target.tooling.slice(0, 2)],
+    integrations: ['TCS AI Harness', 'Knowledge Fabric', 'Governance gates', ...target.tooling.slice(0, 2)],
     techStack: target.techStack,
   }
 

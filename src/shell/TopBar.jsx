@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useAuth } from '../context/AuthContext'
 import { getNavItemForPath } from '../config/navigation'
+import { BRAND } from '../lib/branding'
 import {
   Search,
   Bell,
@@ -76,7 +77,7 @@ export function TopBar() {
         <div className="flex items-center gap-2 min-w-0 shrink">
           <div className="min-w-0">
             <p className="font-display font-semibold text-sm text-cx-fg leading-tight truncate">
-              {currentNav?.label ?? 'Horizon'}
+              {currentNav?.label ?? BRAND.name}
             </p>
             <p className="text-[10px] text-cx-fg-dim truncate max-w-[180px] sm:max-w-[240px]">
               {currentInitiative.title}

@@ -49,7 +49,7 @@ export default function ExecutiveInsights() {
           className="mt-6 p-4 rounded-xl border border-cx-accent/30 bg-cx-accent/5"
         >
           <p className="text-sm text-cx-fg-muted italic text-center">
-            "Horizon is building an Enterprise AI Engineering Operating System — not isolated AI agents."
+            "{BRAND.name} is building an Enterprise AI Engineering Operating System — not isolated AI agents."
           </p>
         </motion.div>
       </GlassPanel>

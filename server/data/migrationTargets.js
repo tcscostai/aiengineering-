@@ -107,7 +107,7 @@ export const MIGRATION_TARGETS = {
     phase3Objectives: [
       'Port legacy Python/Java glue code to FastAPI routers',
       'Model domain entities with Pydantic and SQLAlchemy',
-      'Generate OpenAPI for Horizon agent harness integration',
+      'Generate OpenAPI for TCS agent harness integration',
     ],
     moduleSuffix: '-api',
   },

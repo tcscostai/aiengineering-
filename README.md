@@ -1,4 +1,4 @@
-# HORIZON AI Engineering
+# TCS AI Engineering
 
 **Engineering AI at Enterprise Scale**
 

@@ -11,7 +11,7 @@ const DEMO_COBOL_PATH = '/Users/saurabhdubey/AI Engineering/horizon-ai-engineeri
 
 const SAMPLE_REPOS = [
   { label: 'COBOL Claims (legacy)', localPath: DEMO_COBOL_PATH },
-  { label: 'Horizon (this app)', localPath: '/Users/saurabhdubey/AI Engineering/horizon-ai-engineering' },
+  { label: 'TCS (this app)', localPath: '/Users/saurabhdubey/AI Engineering/horizon-ai-engineering' },
   { label: 'React (public)', url: 'https://github.com/facebook/react.git', branch: 'main' },
   { label: 'Vite', url: 'https://github.com/vitejs/vite.git', branch: 'main' },
 ]

@@ -16,10 +16,10 @@ app.get('/api/health', (_req, res) => {
 app.get('/', (_req, res) => {
   const uiPort = process.env.VITE_DEV_PORT ?? '5173'
   res.type('html').send(`<!DOCTYPE html>
-<html><head><title>Horizon RE API</title></head>
+<html><head><title>TCS RE API</title></head>
 <body style="font-family:system-ui;background:#0c0f16;color:#e8edf4;padding:2rem">
   <h1>Reverse Engineering API</h1>
-  <p>This is the scanner backend only — it does not serve the Horizon UI.</p>
+  <p>This is the scanner backend only — it does not serve the TCS UI.</p>
   <p><strong>Open the app:</strong> <a href="http://localhost:${uiPort}/" style="color:#5ec8f2">http://localhost:${uiPort}/</a></p>
   <p style="color:#8b9cb0;font-size:0.9rem">API health: <a href="/api/re/health" style="color:#5ec8f2">/api/re/health</a></p>
 </body></html>`)

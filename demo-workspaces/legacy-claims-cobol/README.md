@@ -1,6 +1,6 @@
 # Legacy Claims Adjudication — COBOL Workspace
 
-Synthetic mainframe-style healthcare claims codebase for **Horizon Reverse Engineering Studio**.
+Synthetic mainframe-style healthcare claims codebase for **TCS Reverse Engineering Studio**.
 
 ## Scan this workspace
 

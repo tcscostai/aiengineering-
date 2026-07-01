@@ -30,7 +30,7 @@ function MacTrafficLights({ onClose, disabled }) {
 function PromptLine({ text, showCursor }) {
   return (
     <div className="font-mono text-[13px] leading-[1.55] whitespace-pre-wrap break-all">
-      <span className="text-[#3ecf9b]">engineer@horizon-mac</span>
+      <span className="text-[#3ecf9b]">engineer@tcs-mac</span>
       <span className="text-[#8b9cb0]">:</span>
       <span className="text-[#5ec8f2]">~/agents</span>
       <span className="text-[#8b9cb0]"> % </span>
@@ -169,7 +169,7 @@ export function AgentDeployTerminal({ agent, open, onClose, onComplete }) {
               <MacTrafficLights onClose={onClose} disabled={!done} />
               <div className="flex-1 text-center">
                 <span className="text-[13px] text-[#b0b0b2] font-medium">
-                  engineer — horizon-agent-deploy — zsh — 80×24
+                  engineer — tcs-agent-deploy — zsh — 80×24
                 </span>
               </div>
               <div className="w-14" />

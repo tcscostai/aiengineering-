@@ -1,5 +1,5 @@
-/** Official Horizon Blue Cross Blue Shield of New Jersey logo (from horizonblue.com press assets) */
-const LOGO_SRC = `${import.meta.env.BASE_URL}horizon-healthcare-logo.png`
+/** RESERVED — Horizon BCBSNJ logo for future use. Asset: public/branding/horizon-healthcare-logo.png */
+const LOGO_SRC = `${import.meta.env.BASE_URL}branding/horizon-healthcare-logo.png`
 
 export function HorizonHealthcareLogo({ className = '', onDark = true }) {
   return (

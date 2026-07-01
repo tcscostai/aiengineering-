@@ -9,5 +9,5 @@
     { "id": "governance", "label": "Governance", "value": 96, "unit": "%", "trend": 2, "sparkline": [88, 90, 92, 94, 95, 96] },
     { "id": "value", "label": "Business Value", "value": 4.2, "unit": "M ROI", "trend": 18, "sparkline": [1.2, 1.8, 2.4, 3.0, 3.6, 4.2] }
   ],
-  "executiveSummary": "Horizon AI Engineering Operating System has delivered 4.2M ROI through systematic agent reuse, reducing time-to-value by 67% across AD, AMS, and QE domains."
+  "executiveSummary": "TCS AI Engineering Operating System has delivered 4.2M ROI through systematic agent reuse, reducing time-to-value by 67% across AD, AMS, and QE domains."
 }

@@ -57,7 +57,7 @@ export const PLATFORM_TOOLS = {
     color: '#8b9cb0',
     runtimeType: '',
     harnessLabel: 'External runtime',
-    evaluationNote: 'Standard Horizon evaluation pipeline',
+    evaluationNote: 'Standard TCS evaluation pipeline',
   },
 }
 

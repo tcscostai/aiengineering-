@@ -17,7 +17,8 @@ import {
 import { useAuth } from '../context/AuthContext'
 import { getTokenPreview } from '../services/authService'
 import { ParticleBackground } from '../components/ui/ParticleBackground'
-import { HorizonHealthcareLogo } from '../components/ui/HorizonHealthcareLogo'
+import { TcsLogo } from '../components/ui/TcsLogo'
+import { BRAND } from '../lib/branding'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -74,8 +75,8 @@ export default function LoginPage() {
         >
           <div>
             <div className="mb-16">
-              <HorizonHealthcareLogo className="mb-2" />
-              <p className="text-[10px] uppercase tracking-[0.25em] text-cx-fg-dim mt-4">AI Engineering Platform</p>
+              <TcsLogo variant="hero" className="mb-2" />
+              <p className="text-[10px] uppercase tracking-[0.25em] text-cx-fg-dim mt-4">{BRAND.productName}</p>
             </div>
 
             <h1 className="font-display text-4xl xl:text-5xl font-semibold text-cx-fg leading-[1.1] mb-6 max-w-lg">
@@ -85,8 +86,7 @@ export default function LoginPage() {
               </span>
             </h1>
             <p className="text-cx-fg-dim text-base leading-relaxed max-w-md mb-12">
-              Secure access to agent orchestration, knowledge fabric, harness engineering, and
-              enterprise workflows for Horizon Blue Cross Blue Shield of New Jersey — JWT-authenticated for production governance.
+              {BRAND.loginSubtitle}
             </p>
 
             <div className="grid grid-cols-3 gap-4 max-w-lg">
@@ -111,7 +111,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-[10px] text-cx-fg-dim font-mono">
-            Horizon BCBSNJ · AI Engineering · v2.4.0
+            {BRAND.footerLine} · {BRAND.version}
           </p>
         </motion.div>
 
@@ -135,6 +135,9 @@ export default function LoginPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0, y: -8 }}
                     >
+                      <div className="mb-8 lg:hidden flex justify-center">
+                        <TcsLogo variant="hero" className="!object-center max-w-[min(100%,320px)] sm:max-w-[min(100%,360px)]" />
+                      </div>
                       <div className="mb-8">
                         <p className="text-2xs uppercase tracking-[0.22em] text-cx-accent mb-2">Secure Sign In</p>
                         <h2 className="font-display text-2xl font-semibold text-cx-fg">Welcome back</h2>
@@ -274,7 +277,7 @@ export default function LoginPage() {
             </div>
 
             <p className="text-center text-[10px] text-cx-fg-dim mt-6">
-              By signing in you agree to Horizon Responsible AI & enterprise data policies.
+              By signing in you agree to {BRAND.policiesLabel}.
             </p>
           </motion.div>
         </div>

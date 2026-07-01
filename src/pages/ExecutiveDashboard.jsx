@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { BRAND } from '../lib/branding'
 import { Activity, Bot, Award, Shield, Recycle, Zap, Rocket, Puzzle, GitBranch, Database, BarChart3 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { PageHeader } from '../components/ui/PageHeader'
@@ -103,7 +103,7 @@ export default function ExecutiveDashboard() {
 
       <GlassPanel hero className="p-6">
         <p className="text-center text-sm text-cx-fg-dim max-w-3xl mx-auto leading-relaxed">
-          Horizon is building an{' '}
+          {BRAND.name} is building an{' '}
           <span className="text-cx-accent font-medium">Enterprise AI Engineering Operating System</span>{' '}
           — every agent from every team onboards here for engineering excellence across Application Development, AMS, and Quality Engineering.
         </p>

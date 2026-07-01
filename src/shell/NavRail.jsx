@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { NavLink, useLocation } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, ChevronDown, Triangle } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { navGroups } from '../config/navigation'
+import { TcsLogo } from '../components/ui/TcsLogo'
+import { BRAND } from '../lib/branding'
 
 function groupHasActiveRoute(items, pathname) {
   return items.some(
@@ -41,15 +43,21 @@ export function NavRail() {
       <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-cx-accent/30 via-transparent to-cx-accent2/20" />
 
       <div className="p-3 border-b border-cx-line">
-        <div className="flex items-center gap-2.5">
-          <div className="shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-cx-accent/20 to-cx-accent2/20 border border-cx-accent/30 flex items-center justify-center">
-            <Triangle className="w-4 h-4 text-cx-accent" strokeWidth={1.75} />
+        <div className="flex flex-col gap-2 min-w-0">
+          <div className={`flex items-center min-w-0 ${navExpanded ? 'justify-start' : 'justify-center'}`}>
+            <TcsLogo
+              compact={!navExpanded}
+              className={navExpanded ? '!w-full !max-w-[188px] !h-auto' : ''}
+            />
           </div>
           {navExpanded && (
-            <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} className="min-w-0">
-              <p className="font-display font-semibold text-sm text-cx-fg truncate">HORIZON</p>
-              <p className="text-[9px] uppercase text-cx-fg-dim tracking-widest truncate">AI Engineering</p>
-            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-[8px] uppercase text-cx-fg-dim tracking-[0.18em] leading-snug pl-0.5"
+            >
+              {BRAND.tagline}
+            </motion.p>
           )}
         </div>
       </div>
