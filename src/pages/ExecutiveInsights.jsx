@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { TrendingUp } from 'lucide-react'
+import { BRAND } from '../lib/branding'
 import { PageHeader } from '../components/ui/PageHeader'
 import { GlassPanel } from '../components/ui/GlassPanel'
 import insightsData from '../data/insights.json'

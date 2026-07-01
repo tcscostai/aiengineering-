@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { BRAND } from '../lib/branding'
 import { Activity, Bot, Award, Shield, Recycle, Zap, Rocket, Puzzle, GitBranch, Database, BarChart3 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
