@@ -9,6 +9,7 @@ import { CategoryAgentsPanel } from '../agents/CategoryAgentsPanel'
 import { DomainPlatformPlanes } from './DomainPlatformPlanes'
 import { DomainQuickActions } from './DomainQuickActions'
 import { DomainMetricsBar, DomainAgentRunner, DomainActivityFeed } from './DomainWorkspace'
+import { ScriptStudioPanel } from '../qe/ScriptStudioPanel'
 import { useApp } from '../../context/AppContext'
 import { useHarness } from '../../hooks/useHarness'
 import {
@@ -159,15 +160,15 @@ function AMSDomainPanel({ agents, incidentStep, onAdvanceIncident, incidentRunni
             <p className="text-2xs uppercase text-cx-fg-dim mb-3">Root cause (step 5+)</p>
             <p className="text-sm text-cx-fg leading-relaxed">
               {incidentStep >= 5
-                ? 'Connection pool exhaustion in payment-gateway-service due to unreleased connections after deployment v2.4.1'
-                : 'Run RCA Agent via harness or advance incident response to correlate logs…'}
+                ? 'Accumulator cache not invalidated after plan document v2026.1 update — stale copay values served to member portal'
+                : 'Run RCA Agent via harness or advance incident response to correlate benefits services…'}
             </p>
           </GlassPanel>
           <GlassPanel className="p-6">
             <p className="text-2xs uppercase text-cx-success mb-3">Remediation (step 6)</p>
             <p className="text-sm text-cx-fg-muted leading-relaxed">
               {incidentStep >= 6
-                ? 'Rollback v2.4.1 and apply hotfix PR-8847 for connection lifecycle management'
+                ? 'Flush benefits accumulator cache, redeploy plan rules service, run Script Generation Agent regression gate before release'
                 : 'Runbook Assistant will generate change recommendation when timeline completes'}
             </p>
             <Link
@@ -184,7 +185,7 @@ function AMSDomainPanel({ agents, incidentStep, onAdvanceIncident, incidentRunni
   )
 }
 
-function QEDomainPanel({ suites, agents }) {
+function QEDomainPanel({ suites }) {
   const coverageData = suites
     .filter((s) => s.agentId)
     .map((s) => ({ name: s.label.split(' ')[0], value: Math.round(s.automated) }))
@@ -193,10 +194,16 @@ function QEDomainPanel({ suites, agents }) {
     ? Math.round(coverageData.reduce((s, d) => s + d.value, 0) / coverageData.length)
     : 0
 
+  const agentSuites = suites.filter((s) => s.agentId)
+  const traced = agentSuites.length
+    ? Math.round(agentSuites.reduce((sum, d) => sum + (d.requirementsTraced ?? 0), 0) / agentSuites.length)
+    : 0
+
   return (
     <div className="grid lg:grid-cols-3 gap-6 mb-6">
       <GlassPanel hero className="p-6 lg:col-span-2">
-        <p className="text-2xs uppercase text-cx-accent tracking-widest mb-4">Test suites (agent-bound)</p>
+        <p className="text-2xs uppercase text-cx-accent tracking-widest mb-1">Benefits test pyramid</p>
+        <p className="text-xs text-cx-fg-dim mb-4">Healthcare &amp; Life Sciences — agent-bound suites with automation coverage</p>
         <div className="grid md:grid-cols-2 gap-3">
           {suites.map((suite, i) => (
             <motion.div
@@ -207,8 +214,8 @@ function QEDomainPanel({ suites, agents }) {
               className="p-4 rounded-xl border border-cx-border bg-cx-raised/30"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-cx-fg">{suite.label}</span>
-                <span className={`text-[9px] uppercase px-2 py-0.5 rounded-md ${
+                <span className="text-sm text-cx-fg leading-tight">{suite.label}</span>
+                <span className={`text-[9px] uppercase px-2 py-0.5 rounded-md shrink-0 ml-2 ${
                   suite.status === 'passing' ? 'bg-cx-success/10 text-cx-success' :
                   suite.status === 'running' ? 'bg-cx-accent/10 text-cx-accent animate-pulse' :
                   suite.status === 'warn' ? 'bg-cx-warn/10 text-cx-warn' :
@@ -220,10 +227,13 @@ function QEDomainPanel({ suites, agents }) {
               ) : (
                 <p className="text-[10px] text-cx-fg-dim mb-2">No agent onboarded</p>
               )}
-              <div className="flex justify-between text-xs text-cx-fg-dim">
-                <span>{suite.count} tests</span>
+              <div className="flex justify-between text-xs text-cx-fg-dim mb-1">
+                <span>{suite.count} cases</span>
                 <span>{Math.round(suite.automated)}% automated</span>
               </div>
+              {suite.scriptsGenerated > 0 && (
+                <p className="text-[10px] text-cx-accent2">{suite.scriptsGenerated} scripts generated · {Math.round(suite.requirementsTraced ?? 0)}% traced</p>
+              )}
             </motion.div>
           ))}
         </div>
@@ -231,7 +241,8 @@ function QEDomainPanel({ suites, agents }) {
 
       <GlassPanel className="p-6">
         <p className="text-2xs uppercase text-cx-fg-dim mb-2">Automation coverage</p>
-        <p className="font-display text-4xl font-semibold text-cx-accent mb-4">{overall}%</p>
+        <p className="font-display text-4xl font-semibold text-cx-accent mb-1">{overall}%</p>
+        <p className="text-xs text-cx-fg-dim mb-4">{traced}% requirements traced</p>
         {coverageData.length > 0 ? (
           <div className="h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -379,7 +390,8 @@ export function DomainEngineeringPage({ category }) {
           incidentRunning={incidentRunning}
         />
       )}
-      {category === 'qe' && <QEDomainPanel suites={suites} agents={agents} />}
+      {category === 'qe' && <QEDomainPanel suites={suites} />}
+      {category === 'qe' && <ScriptStudioPanel onNotify={addNotification} />}
 
       <DomainActivityFeed activities={displayActivities} color={metrics.color} />
     </div>

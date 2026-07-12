@@ -4,7 +4,7 @@ import { getAllAgents } from './agentService'
 import { getHarnessRuns } from './harnessService'
 import { getEvaluationRuns } from './evaluationService'
 import { getScanHistory } from './reverseEngineeringService'
-import { ENTERPRISE_FLOW_STEPS, DEMO_FLOW_WORKSPACE_ID } from '../data/enterpriseFlowSteps'
+import { ENTERPRISE_FLOW_STEPS, DEMO_FLOW_WORKSPACE_ID, DEMO_BENEFITS_WORKSPACE_ID } from '../data/enterpriseFlowSteps'
 import { isDemoScanId } from '../data/demoReScanResult'
 
 const FLOW_KEY = 'enterprise_flow'
@@ -43,6 +43,10 @@ export function startEnterpriseFlow(workspaceId) {
 
 export function startDemoEnterpriseFlow() {
   return startEnterpriseFlow(DEMO_FLOW_WORKSPACE_ID)
+}
+
+export function startDemoBenefitsEnterpriseFlow() {
+  return startEnterpriseFlow(DEMO_BENEFITS_WORKSPACE_ID)
 }
 
 export function markFlowStepComplete(stepId) {

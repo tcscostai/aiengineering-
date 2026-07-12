@@ -7,10 +7,10 @@ export function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center bg-cx-void">
+      <div className="min-h-screen flex items-center justify-center bg-cx-void">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-xl border-2 border-cx-accent/30 border-t-cx-accent animate-spin" />
-          <p className="text-xs text-cx-fg-dim uppercase tracking-widest">Verifying session</p>
+          <p className="text-xs text-cx-fg-dim uppercase tracking-widest">Loading TCS AI Engineering Studio…</p>
         </div>
       </div>
     )
@@ -28,8 +28,11 @@ export function PublicOnlyRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center bg-cx-void">
-        <div className="w-8 h-8 rounded-full border-2 border-cx-accent/30 border-t-cx-accent animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-cx-void">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-cx-accent/30 border-t-cx-accent animate-spin" />
+          <p className="text-xs text-cx-fg-dim">Loading…</p>
+        </div>
       </div>
     )
   }

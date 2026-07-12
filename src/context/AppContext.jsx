@@ -94,6 +94,7 @@ export function AppProvider({ children }) {
     enterpriseFlow,
     startEnterpriseFlow: enterpriseFlow.startFlow,
     startDemoEnterpriseFlow: enterpriseFlow.startDemoFlow,
+    startDemoBenefitsEnterpriseFlow: enterpriseFlow.startDemoBenefitsFlow,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

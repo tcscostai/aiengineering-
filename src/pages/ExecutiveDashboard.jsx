@@ -11,7 +11,7 @@ import { CATEGORIES } from '../lib/constants'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function ExecutiveDashboard() {
-  const { metrics, health, agents, agentMetrics, startDemoEnterpriseFlow, enterpriseFlow } = useApp()
+  const { metrics, health, agents, agentMetrics, startDemoEnterpriseFlow, startDemoBenefitsEnterpriseFlow, enterpriseFlow } = useApp()
 
   const cards = [
     { label: 'Active Workspaces', value: metrics.activeInitiatives, icon: Rocket },
@@ -44,7 +44,11 @@ export default function ExecutiveDashboard() {
         description="Live metrics from onboarded agents and engineering workspaces across AD, AMS, and QE."
       />
 
-      <EnterpriseFlowDashboard flow={enterpriseFlow} onStartDemo={startDemoEnterpriseFlow} />
+      <EnterpriseFlowDashboard
+        flow={enterpriseFlow}
+        onStartDemo={startDemoEnterpriseFlow}
+        onStartBenefitsDemo={startDemoBenefitsEnterpriseFlow}
+      />
 
       {agentMetrics.totalAgents === 0 && (
         <GlassPanel className="p-4 mb-6 border-cx-accent/30 bg-cx-accent/5">

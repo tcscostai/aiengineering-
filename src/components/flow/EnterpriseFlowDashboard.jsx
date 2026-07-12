@@ -1,14 +1,19 @@
-import { Rocket, Play } from 'lucide-react'
+import { Rocket, Play, FlaskConical } from 'lucide-react'
 import { GlassPanel } from '../ui/GlassPanel'
 import { ProgressBar } from '../ui/ProgressBar'
 import { EnterpriseFlowStepList } from './EnterpriseFlowPanel'
 import { useFlowNavigate } from '../../hooks/useFlowNavigate'
 
-export function EnterpriseFlowDashboard({ flow, onStartDemo }) {
+export function EnterpriseFlowDashboard({ flow, onStartDemo, onStartBenefitsDemo }) {
   const { goToStep, continueFlow } = useFlowNavigate()
 
   const handleStartDemo = () => {
     onStartDemo()
+    window.setTimeout(() => continueFlow(), 0)
+  }
+
+  const handleStartBenefitsDemo = () => {
+    onStartBenefitsDemo?.()
     window.setTimeout(() => continueFlow(), 0)
   }
 
@@ -27,13 +32,22 @@ export function EnterpriseFlowDashboard({ flow, onStartDemo }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {!flow.active && (
-            <button
-              type="button"
-              onClick={handleStartDemo}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-cx-accent/40 bg-cx-accent/10 text-cx-accent text-sm"
-            >
-              <Rocket className="w-4 h-4" /> Start demo flow
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={handleStartDemo}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-cx-accent/40 bg-cx-accent/10 text-cx-accent text-sm"
+              >
+                <Rocket className="w-4 h-4" /> Prior Auth demo
+              </button>
+              <button
+                type="button"
+                onClick={handleStartBenefitsDemo}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-cx-accent2/40 bg-cx-accent2/10 text-cx-accent2 text-sm"
+              >
+                <FlaskConical className="w-4 h-4" /> Benefits E2E demo
+              </button>
+            </>
           )}
           {flow.active && flow.currentStep && (
             <button

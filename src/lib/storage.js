@@ -11,8 +11,12 @@ export function loadJSON(key, fallback) {
 }
 
 export function saveJSON(key, value) {
-  localStorage.setItem(PREFIX + key, JSON.stringify(value))
-  window.dispatchEvent(new CustomEvent('horizon-storage', { detail: { key } }))
+  try {
+    localStorage.setItem(PREFIX + key, JSON.stringify(value))
+    window.dispatchEvent(new CustomEvent('horizon-storage', { detail: { key } }))
+  } catch (err) {
+    console.warn(`Storage save failed for ${key}:`, err)
+  }
 }
 
 export function generateId(prefix = 'id') {

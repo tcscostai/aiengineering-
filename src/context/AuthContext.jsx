@@ -13,10 +13,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   const refresh = useCallback(async () => {
-    const valid = await validateSession()
-    setSession(valid)
-    setLoading(false)
-    return valid
+    try {
+      const valid = await validateSession()
+      setSession(valid)
+    } catch (err) {
+      console.error('Session validation failed:', err)
+      setSession(null)
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {

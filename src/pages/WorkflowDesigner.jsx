@@ -75,7 +75,7 @@ export default function WorkflowDesigner() {
           <div>
             <p className="text-2xs uppercase text-cx-fg-dim tracking-widest">Workflow Templates</p>
             <p className="text-xs text-cx-fg-muted mt-0.5">
-              Open a template to edit on the canvas — prior auth, claim adjudication, eligibility, and more
+              Open a template to edit on the canvas — benefits E2E, prior auth, eligibility, formulary, and more
             </p>
           </div>
           <div className="flex flex-wrap gap-1.5">

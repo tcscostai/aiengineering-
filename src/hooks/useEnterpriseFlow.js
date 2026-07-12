@@ -3,6 +3,7 @@ import {
   computeEnterpriseFlow,
   startEnterpriseFlow,
   startDemoEnterpriseFlow,
+  startDemoBenefitsEnterpriseFlow,
   markFlowStepComplete,
   goToFlowStep,
   continueFlowNavigation,
@@ -31,6 +32,10 @@ export function useEnterpriseFlow(agents, initiatives) {
     },
     startDemoFlow: () => {
       startDemoEnterpriseFlow()
+      refresh()
+    },
+    startDemoBenefitsFlow: () => {
+      startDemoBenefitsEnterpriseFlow()
       refresh()
     },
     markStep: (stepId) => {

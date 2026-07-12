@@ -668,6 +668,74 @@ Use these exact URLs when **Verify connection** is required (format validation p
 
 ---
 
+## Benefits Administration & Validation — E2E Walkthrough
+
+Complete **Healthcare & Life Sciences** benefits testing with **automation script generation** (Playwright, Selenium, Cypress).
+
+### Start the Benefits demo
+
+1. Sign in → **Executive Dashboard**
+2. Click **Benefits E2E demo** (purple button)
+3. Use **Continue** in the top banner through all 12 steps
+
+| Item | Value |
+|------|--------|
+| Workspace | **Benefits Administration & Validation** |
+| Industry | Healthcare & Life Sciences |
+| Objective | ≥90% automation coverage with auditable benefit accuracy |
+| Domains | AD + AMS + QE |
+
+### Key agents (pre-seeded)
+
+| Agent | Domain | Role |
+|-------|--------|------|
+| Benefits API Design Agent | AD | FHIR Coverage/Benefit APIs, accumulator contracts |
+| Automation Script Generation Agent | QE | Playwright / Selenium / Cypress script generation |
+| Eligibility Test Agent | QE | 270/271, COB, member status |
+| Formulary Test Agent | QE | Pharmacy tiers, step therapy, REMS (Life Sciences) |
+| Regression Test Agent | QE | Full benefits regression matrix |
+
+### Step 8 — QE Engineering + Script Studio
+
+**Navigate:** `/qe`
+
+1. Review **Benefits test pyramid** suites (L1–L7)
+2. Scroll to **Script Studio**
+3. Select suite: **Full regression** (or Eligibility / Formulary / Life Sciences specialty)
+4. Select framework: **Playwright · TypeScript** (or Selenium Java, Cypress)
+5. Click **Generate scripts**
+6. Preview generated files (Page Objects, spec files, CI workflow)
+7. **Download bundle** or individual files
+
+**Harness task (Script Generation Agent):**
+
+`Generate Playwright TypeScript scripts for HMO/PPO benefits inquiry regression suite`
+
+### Workflows
+
+Open **Workflow Designer** (`/workflow`) and load:
+
+- **Benefits Inquiry Automation** — API design → script gen → regression → HIPAA gate
+- **Benefits Administration E2E** — full cycle with eligibility, formulary, governance
+
+### Coverage targets
+
+| Metric | Target |
+|--------|--------|
+| Requirements traced | ≥95% |
+| Automation coverage | ≥90% |
+| Benefit accuracy | ≥99% on golden scenarios |
+| Scripts generated | Runnable Playwright/Selenium with CI stub |
+
+### Knowledge Fabric debt items
+
+Check **Knowledge Fabric** → Debt Profiler for:
+
+- Benefits accumulator edge cases — 22% untested → Script Generation Agent assigned
+- Formulary tier change — no E2E → Formulary Test Agent + Script Studio
+
+---
+
 ## Related docs
 
 - [NAVIGATION_GUIDE.md](./NAVIGATION_GUIDE.md) — shell layout and module-by-module navigation

@@ -3,6 +3,7 @@ import { PLATFORM_TOOLS } from './platformTools'
 
 export const WORKSPACE_INDUSTRIES = [
   'Healthcare',
+  'Healthcare & Life Sciences',
   'Financial Services',
   'Retail',
   'Manufacturing',
@@ -56,10 +57,11 @@ export const WORKSPACE_DOMAIN_TEMPLATES = {
     deliverables: [
       'Regression suite automation',
       'API contract & security tests',
-      'Synthetic test data generation',
+      'Playwright / Selenium script generation',
+      'Synthetic member test data',
       'Release quality gate scoring',
     ],
-    suggestedAgents: ['Regression Test Agent', 'API Test Agent'],
+    suggestedAgents: ['Regression Test Agent', 'API Test Agent', 'Automation Script Generation Agent'],
     engineeringPath: '/qe',
   },
 }

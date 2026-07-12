@@ -111,7 +111,7 @@ export function deleteCustomGuardrail(id) {
 function agentInScope(agent, scope) {
   if (scope === 'all') return true
   if (scope === 'healthcare') {
-    return /prior auth|claims|healthcare|clinical|pharmacy|member|eligibility|fhir|hipaa/i.test(
+    return /prior auth|claims|healthcare|clinical|pharmacy|member|eligibility|benefit|formulary|fhir|hipaa/i.test(
       `${agent.project} ${agent.purpose} ${agent.name}`
     )
   }

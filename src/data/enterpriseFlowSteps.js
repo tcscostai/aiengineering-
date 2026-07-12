@@ -111,3 +111,4 @@ export const ENTERPRISE_FLOW_STEPS = [
 ]
 
 export const DEMO_FLOW_WORKSPACE_ID = 'demo_init_prior_auth'
+export const DEMO_BENEFITS_WORKSPACE_ID = 'demo_init_benefits'

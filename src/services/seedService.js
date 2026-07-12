@@ -7,9 +7,10 @@ import { seedEvaluationData } from './evaluationService'
 import { seedGovernanceData } from './governanceService'
 import { setActiveWorkspace } from './initiativeService'
 import { getFlowRecord, startDemoEnterpriseFlow } from './enterpriseFlowService'
+import { BENEFITS_WORKSPACE_PRESET } from '../data/benefitsScenario'
 import { buildDefaultDomainPlan } from '../data/workspaceDomains'
 
-export const PLATFORM_SEED_VERSION = 4
+export const PLATFORM_SEED_VERSION = 5
 const VERSION_KEY = 'platform_seed_version'
 
 function upsertAgents() {
@@ -59,7 +60,13 @@ function upsertWorkspaces() {
     DEMO_AGENT_IDS.regression,
   ]
   const claimsAgents = [DEMO_AGENT_IDS.codeReview, DEMO_AGENT_IDS.apiTest]
-  const resilienceAgents = [DEMO_AGENT_IDS.rca, DEMO_AGENT_IDS.runbook]
+  const benefitsAgents = [
+    DEMO_AGENT_IDS.benefitsApi,
+    DEMO_AGENT_IDS.scriptGen,
+    DEMO_AGENT_IDS.eligibilityTest,
+    DEMO_AGENT_IDS.formularyTest,
+    DEMO_AGENT_IDS.regression,
+  ]
 
   const now = new Date().toISOString()
   const demos = [
@@ -96,6 +103,22 @@ function upsertWorkspaces() {
       updatedAt: now,
     },
     {
+      id: BENEFITS_WORKSPACE_PRESET.id,
+      title: BENEFITS_WORKSPACE_PRESET.title,
+      description: BENEFITS_WORKSPACE_PRESET.description,
+      industry: BENEFITS_WORKSPACE_PRESET.industry,
+      domain: BENEFITS_WORKSPACE_PRESET.domain,
+      status: 'active',
+      progress: 65,
+      domains: ['ad', 'ams', 'qe'],
+      domainPlans: buildDemoDomainPlans(['ad', 'ams', 'qe']),
+      linkedAgentIds: benefitsAgents,
+      businessObjective: BENEFITS_WORKSPACE_PRESET.businessObjective,
+      stakeholders: BENEFITS_WORKSPACE_PRESET.stakeholders,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
       id: 'demo_init_resilience',
       title: 'Platform Resilience Enhancement',
       description: 'Predictive incident management and automated RCA with knowledge capture runbooks.',
@@ -105,7 +128,7 @@ function upsertWorkspaces() {
       progress: 58,
       domains: ['ams'],
       domainPlans: buildDemoDomainPlans(['ams']),
-      linkedAgentIds: resilienceAgents,
+      linkedAgentIds: [DEMO_AGENT_IDS.rca, DEMO_AGENT_IDS.runbook],
       businessObjective: 'Reduce MTTR by 40% through agent-assisted incident response',
       stakeholders: 'Director of Operations, Head of SRE',
       createdAt: now,
@@ -155,26 +178,33 @@ function seedWorkflows() {
 
 function seedHarnessRuns(demoAgents) {
   const existing = loadJSON('harness_runs', [])
-  if (existing.some((r) => r.id?.startsWith('demo_run_'))) return
+  const existingIds = new Set(existing.map((r) => r.id))
 
   const runs = [
-    { agentId: DEMO_AGENT_IDS.rca, task: 'Analyze INC-2024-8847 payment gateway timeout', daysAgo: 1, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.incidentClass, task: 'Classify production alert — claims API latency', daysAgo: 2, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.regression, task: 'Prior auth regression suite — sprint 14', daysAgo: 3, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.archReview, task: 'Architecture review — decision engine HLD', daysAgo: 5, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.apiDesign, task: 'OpenAPI spec for clinical review endpoint', daysAgo: 6, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.codeReview, task: 'PR #8847 connection pool lifecycle fix', daysAgo: 1, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.apiTest, task: 'Contract tests — claims eligibility API', daysAgo: 4, status: 'completed' },
-    { agentId: DEMO_AGENT_IDS.runbook, task: 'Update runbook — connection pool exhaustion', daysAgo: 2, status: 'completed' },
+    { id: 'demo_run_1', agentId: DEMO_AGENT_IDS.rca, task: 'Analyze INC-2024-9102 benefits inquiry stale copay', daysAgo: 1, status: 'completed' },
+    { id: 'demo_run_2', agentId: DEMO_AGENT_IDS.incidentClass, task: 'Classify production alert — benefits API stale accumulator', daysAgo: 2, status: 'completed' },
+    { id: 'demo_run_3', agentId: DEMO_AGENT_IDS.regression, task: 'Prior auth regression suite — sprint 14', daysAgo: 3, status: 'completed' },
+    { id: 'demo_run_4', agentId: DEMO_AGENT_IDS.archReview, task: 'Architecture review — decision engine HLD', daysAgo: 5, status: 'completed' },
+    { id: 'demo_run_5', agentId: DEMO_AGENT_IDS.apiDesign, task: 'OpenAPI spec for clinical review endpoint', daysAgo: 6, status: 'completed' },
+    { id: 'demo_run_6', agentId: DEMO_AGENT_IDS.codeReview, task: 'PR #8847 connection pool lifecycle fix', daysAgo: 1, status: 'completed' },
+    { id: 'demo_run_7', agentId: DEMO_AGENT_IDS.apiTest, task: 'Contract tests — claims eligibility API', daysAgo: 4, status: 'completed' },
+    { id: 'demo_run_8', agentId: DEMO_AGENT_IDS.runbook, task: 'Update runbook — benefits accumulator cache invalidation', daysAgo: 2, status: 'completed' },
+    { id: 'demo_run_ben_1', agentId: DEMO_AGENT_IDS.scriptGen, task: 'Generate Playwright scripts — HMO/PPO benefits inquiry regression', daysAgo: 1, status: 'completed' },
+    { id: 'demo_run_ben_2', agentId: DEMO_AGENT_IDS.eligibilityTest, task: '270/271 eligibility validation — active member cohort', daysAgo: 2, status: 'completed' },
+    { id: 'demo_run_ben_3', agentId: DEMO_AGENT_IDS.formularyTest, task: 'Formulary tier change regression — 47 NDC moves', daysAgo: 3, status: 'completed' },
+    { id: 'demo_run_ben_4', agentId: DEMO_AGENT_IDS.benefitsApi, task: 'FHIR Coverage/Benefit API contract for benefits inquiry service', daysAgo: 4, status: 'completed' },
   ]
 
-  const seeded = runs.map((spec, i) => {
+  const missing = runs.filter((spec) => !existingIds.has(spec.id))
+  if (!missing.length) return
+
+  const seeded = missing.map((spec) => {
     const agent = demoAgents.find((a) => a.id === spec.agentId)
     const created = new Date()
     created.setDate(created.getDate() - spec.daysAgo)
     const completed = new Date(created.getTime() + 45000)
     return {
-      id: `demo_run_${i + 1}`,
+      id: spec.id,
       agentId: spec.agentId,
       agentName: agent?.name ?? 'Agent',
       category: agent?.category,

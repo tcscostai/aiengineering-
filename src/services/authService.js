@@ -72,6 +72,9 @@ function base64UrlDecode(str) {
 }
 
 async function signHmac(data) {
+  if (!globalThis.crypto?.subtle) {
+    throw new Error('Secure context required — open via http://localhost:5173 (not file:// or plain HTTP IP)')
+  }
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(JWT_SECRET),
