@@ -46,6 +46,17 @@ export const PLATFORM_USERS = [
     avatar: 'RV',
     permissions: ['*'],
   },
+  {
+    id: 'usr_spandan',
+    username: 'Spandan',
+    password: 'admin123',
+    name: 'Spandan',
+    role: 'Administrator',
+    org: 'TCS AI Engineering Studio',
+    department: 'Platform Admin',
+    avatar: 'SP',
+    permissions: ['*'],
+  },
 ]
 
 /** @deprecated use PLATFORM_USERS */
